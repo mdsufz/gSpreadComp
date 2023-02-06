@@ -29,7 +29,7 @@ start_pre_configuration() {
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda/envs
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/cloned_tools
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/installation_scripts
-    #conda deactivate
+    conda deactivate
 }
 
 #### DESCRIPTION #### 

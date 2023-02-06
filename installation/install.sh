@@ -118,7 +118,7 @@ do
 		break
 	elif [ $choose = n -o $choose = N ]
 	then
-		echo "Choose what you want to install: "
+		echo "Choose what you want to install:"
 		break
 	else
 		echo "Command not found, please, try again"
