@@ -22,22 +22,16 @@ call_installation_script() {
 #### OUTPUT #### 
 ## The conda and mkdir outputs
 start_pre_configuration() {
-<<<<<<< HEAD
-	conda create -y -n mSpreadComp_env r-essentials r-base
-=======
-	conda create -y -n mSpreadComp_env
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
+
+    conda create -y -n mSpreadComp_env r-essentials r-base
     conda activate mSpreadComp_env
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda/envs
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/cloned_tools
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/installation_scripts
-<<<<<<< HEAD
-    #conda deactivate
-=======
+    
     conda deactivate
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
 }
 
 #### DESCRIPTION #### 
@@ -101,9 +95,5 @@ echo '  \_____________________/		'
 
 echo -e '\n	This might take a while. Time to grab a coffee...\n'
 sleep 3
+}
 
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
