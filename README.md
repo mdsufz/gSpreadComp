@@ -100,13 +100,13 @@ $ bash -i installation/database-setup.sh --help
         mSpreadComp database script v=1.0
         Usage: bash -i database-setup.sh --dbs [module] -o output_folder_for_dbs
 		    USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH MSPREADCOMP
-          --dbs all						          download and install the required and optional databases [default]"
-          --dbs required              	download and install the required databases (Victors and VFDB) for mSpreadComp
-          --dbs optional              	download and install all the optional (ARGs, GTDB-tk, CheckM) databases for mSpreadComp
-          --dbs args						        download and install the required and the ARGs databases.
+          --dbs all				download and install the required and optional databases [default]"
+          --dbs required              		download and install the required databases (Victors and VFDB) for mSpreadComp
+          --dbs optional              		download and install all the optional (ARGs, GTDB-tk, CheckM) databases for mSpreadComp
+          --dbs args				download and install the required and the ARGs databases.
           -o path/folder/to/save/dbs		output folder where you want to save the downloaded databases
-          --help | -h						        show this help message
-          --version | -v					      show database install script version
+          --help | -h				show this help message
+          --version | -v			show database install script version
 
 
 ```
