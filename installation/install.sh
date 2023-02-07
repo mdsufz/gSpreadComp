@@ -71,10 +71,6 @@ fi
 
 echo "your mSpreadComp's path is $mSPREAD_CONDA_ENVIRONMENT_PATH"
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
 yes | cp -rf $DEPENDENCIES_SCRIPTS_PATH $mSPREAD_CONDA_ENVIRONMENT_PATH
 
 yes | cp -rf $INSTALLATION_SCRIPTS_PATH $mSPREAD_DEPENDENCIES_PATH
@@ -121,11 +117,7 @@ do
 		break
 	elif [ $choose = n -o $choose = N ]
 	then
-<<<<<<< HEAD
-		echo "Choose what you want to install: "
-=======
 		echo "Choose what you want to install:"
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
 		break
 	else
 		echo "Command not found, please, try again"
@@ -141,12 +133,7 @@ then
 		then
 			install_main=$choose
 			break
-<<<<<<< HEAD
 		elif [ $choose = n -o $choose = N ]; then
-=======
-		elif [ $choose = n -o $choose = N ]
-		then
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
 			echo "Installation of mSpreadComp main workflow denied"
 			break
 		else
@@ -347,8 +334,4 @@ then
 	conda deactivate
 	fi
 	
-<<<<<<< HEAD
 fi
-=======
-fi
->>>>>>> 712c12e5613978b26288f90ca5849721a6a37f6a
