@@ -72,19 +72,20 @@ if [ "$active_module" = "all" ]; then
 	cd -
 	
 	### DeepARG
-    mkdir -p  "$database_location"/"deeparg"
-    cd "$database_location"/"deeparg"
-    if [ ! -d database  ]; then
-	
-	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-	
-	deeparg download_data -o "$database_location"/"deeparg"
-	
-	conda deactivate
-
-    else echo "-> your DeepARG database is ready"
-    fi
-	cd -
+	#Error accessing data - server seems dead
+    #mkdir -p  "$database_location"/"deeparg"
+    #cd "$database_location"/"deeparg"
+    #if [ ! -d database  ]; then
+#	
+	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+#	
+	#deeparg download_data -o "$database_location"/"deeparg"
+	#
+	#conda deactivate
+#
+#   else echo "-> your DeepARG database is ready"
+#    fi
+#	cd -
 	
 	### Victors
     mkdir -p  "$database_location"/"victors"
@@ -108,8 +109,7 @@ if [ "$active_module" = "all" ]; then
     if [ ! -f VFDB_setB_pro.fas.phr ]; then
 	
     wget http://www.mgc.ac.cn/VFs/Down/VFDB_setB_pro.fas.gz
-    tar xzf VFDB_setB_pro.fas.gz
-    rm -fr VFDB_setB_pro.fas.gz
+	gzip -d VFDB_setB_pro.fas
 	
 	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/blast_env
 	makeblastdb -in VFDB_setB_pro.fas -dbtype prot
@@ -147,8 +147,7 @@ elif [ "$active_module" = "required" ]; then
     if [ ! -f VFDB_setB_pro.fas.phr ]; then
 	
     wget http://www.mgc.ac.cn/VFs/Down/VFDB_setB_pro.fas.gz
-    tar xzf VFDB_setB_pro.fas.gz
-    rm -fr VFDB_setB_pro.fas.gz
+	gzip -d VFDB_setB_pro.fas
 	
 	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/blast_env
 	makeblastdb -in VFDB_setB_pro.fas -dbtype prot
@@ -194,19 +193,19 @@ elif [ "$active_module" = "optional" ]; then
 	cd -
 	
 	### DeepARG
-    mkdir -p  "$database_location"/"deeparg"
-    cd "$database_location"/"deeparg"
-    if [ ! -d database  ]; then
-	
-	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-	
-	deeparg download_data -o "$database_location"/"deeparg"
-	
-	conda deactivate
-
-    else echo "-> your DeepARG database is ready"
-    fi
-	cd -
+    #mkdir -p  "$database_location"/"deeparg"
+    #cd "$database_location"/"deeparg"
+    #if [ ! -d database  ]; then
+#	
+	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+	#
+	#deeparg download_data -o "$database_location"/"deeparg"
+	#
+	#conda deactivate
+#
+    #else echo "-> your DeepARG database is ready"
+    #fi
+	#cd -
 	
  
 elif [ "$active_module" = "args" ]; then
@@ -214,19 +213,19 @@ elif [ "$active_module" = "args" ]; then
 	############################################### REQUIRED AND ARGs ###############################################
 	
 	### DeepARG
-    mkdir -p  "$database_location"/"deeparg"
-    cd "$database_location"/"deeparg"
-    if [ ! -d database  ]; then
-	
-	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-	
-	deeparg download_data -o "$database_location"/"deeparg"
-	
-	conda deactivate
-
-    else echo "-> your DeepARG database is ready"
-    fi
-	cd -
+    #mkdir -p  "$database_location"/"deeparg"
+    #cd "$database_location"/"deeparg"
+    #if [ ! -d database  ]; then
+#	
+	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+	#
+	#deeparg download_data -o "$database_location"/"deeparg"
+	#
+	#conda deactivate
+#
+    #else echo "-> your DeepARG database is ready"
+    #fi
+	#cd -
 	
 	### Victors
     mkdir -p  "$database_location"/"victors"
@@ -250,8 +249,7 @@ elif [ "$active_module" = "args" ]; then
     if [ ! -f VFDB_setB_pro.fas.phr ]; then
 	
     wget http://www.mgc.ac.cn/VFs/Down/VFDB_setB_pro.fas.gz
-    tar xzf VFDB_setB_pro.fas.gz
-    rm -fr VFDB_setB_pro.fas.gz
+	gzip -d VFDB_setB_pro.fas
 	
 	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/blast_env
 	makeblastdb -in VFDB_setB_pro.fas -dbtype prot

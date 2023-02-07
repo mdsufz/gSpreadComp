@@ -23,7 +23,7 @@ call_installation_script() {
 ## The conda and mkdir outputs
 start_pre_configuration() {
 
-    conda create -y -n mSpreadComp_env r-essentials r-base
+    conda create -y -n mSpreadComp_env r-essentials r-base gzip
     conda activate mSpreadComp_env
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda
