@@ -4,7 +4,7 @@ VERSION=1.0
 
 help_message () {
         echo""
-        echo "MuDoGeR database script v=$VERSION"
+        echo "mSpreadComp database script v=$VERSION"
         echo "Usage: bash -i database-setup.sh --dbs [module] -o output_folder_for_dbs"
 		echo "USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH MSPREADCOMP"
         echo ""
