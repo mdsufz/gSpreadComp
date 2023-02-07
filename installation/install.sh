@@ -71,7 +71,6 @@ fi
 
 echo "your mSpreadComp's path is $mSPREAD_CONDA_ENVIRONMENT_PATH"
 
-
 yes | cp -rf $DEPENDENCIES_SCRIPTS_PATH $mSPREAD_CONDA_ENVIRONMENT_PATH
 
 yes | cp -rf $INSTALLATION_SCRIPTS_PATH $mSPREAD_DEPENDENCIES_PATH
@@ -134,8 +133,7 @@ then
 		then
 			install_main=$choose
 			break
-		elif [ $choose = n -o $choose = N ]
-		then
+		elif [ $choose = n -o $choose = N ]; then
 			echo "Installation of mSpreadComp main workflow denied"
 			break
 		else

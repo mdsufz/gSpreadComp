@@ -4,17 +4,17 @@ VERSION=1.0
 
 help_message () {
         echo""
-        echo "MuDoGeR database script v=$VERSION"
+        echo "mSpreadComp database script v=$VERSION"
         echo "Usage: bash -i database-setup.sh --dbs [module] -o output_folder_for_dbs"
 		echo "USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH MSPREADCOMP"
         echo ""
-        echo "  --dbs all						download and install the required and optional databases [default]"
+        echo "  --dbs all			download and install the required and optional databases [default]"
         echo "  --dbs required              	download and install the required databases (Victors and VFDB) for mSpreadComp"
         echo "  --dbs optional              	download and install all the optional (ARGs, GTDB-tk, CheckM) databases for mSpreadComp"
-        echo "  --dbs args						download and install the required and the ARGs databases."
-        echo "  -o path/folder/to/save/dbs		output folder where you want to save the downloaded databases"
-        echo "  --help | -h						show this help message"
-        echo "  --version | -v					show database install script version"
+        echo "  --dbs args			download and install the required and the ARGs databases."
+        echo "  -o path/folder/to/save/dbs	output folder where you want to save the downloaded databases"
+        echo "  --help | -h			show this help message"
+        echo "  --version | -v			show database install script version"
         echo "";}
   
 
