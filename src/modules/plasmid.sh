@@ -68,10 +68,10 @@ fi
 
 #Run PlasFlow
 
-genomes_path=$(realpath $genome_dir)
+genomes_path=`realpath $genome_dir`
 
 for g in $genomes_path/*.$extension; do
-	genome=`rev $g | cut -d'/' -f1 | rev`;
+	genome=${g##*/}
 	mkdir $out/$genome;
 	PlasFlow.py --input $g --output $out/$genome/"$genome"_plasflow_out.tsv --threshold $threshold;
 done

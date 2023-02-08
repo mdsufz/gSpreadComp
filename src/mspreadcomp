@@ -54,13 +54,13 @@ if [ "$1" = taxonomy ]; then
 	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/taxonomy.sh ${@:2}
 elif [ "$1" = quality ]; then
 	echo mspreadcomp quality ${@:2}
-	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/quality.sh ${@:2}
+	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/quality.sh ${@:2}
 elif [ "$1" = plasmid ]; then
 	echo mspreadcomp plasmid ${@:2}
-	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasmid.sh ${@:2}
+	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasmid.sh ${@:2}
 elif [ "$1" = pathogens ]; then
 	echo mspreadcomp pathogens ${@:2}
-	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens.sh ${@:2}
+	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens.sh ${@:2}
 elif [ "$1" = mspread ]; then
 	echo mspreadcomp mspread ${@:2}
 	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/mspread.sh ${@:2}
