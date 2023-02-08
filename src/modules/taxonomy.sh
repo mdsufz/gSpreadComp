@@ -7,7 +7,7 @@ help_message () {
 	echo ""
 	echo "	--genome_dir STR	folder with the bins to be classified (in fasta format)"
 	echo "	--extension STR		fasta file extension (e.g. fa or fasta) [default: fa]"
-	echo "	-o STR				output directory"
+	echo "	-o STR			output directory"
 	echo "	-t INT      		number of threads"
 	echo ""
 	echo "";}
@@ -20,7 +20,7 @@ help_message () {
 threads=1; out="false"; genome_dir="false"; extension=fa
 
 # load in params
-OPTS=`getopt -o ht:o: --long help -- "$@"`
+OPTS=`getopt -o ht:o: --long help,genome_dir:,extension: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
@@ -28,8 +28,8 @@ if [ $? -ne 0 ]; then help_message; exit 1; fi
 while true; do
         case "$1" in
                 --genome_dir) genome_dir=$2; shift 2;;
-				--extension) extension=$2; shift 2;;
-				-t) threads=$2; shift 2;;				
+		--extension) extension=$2; shift 2;;
+		-t) threads=$2; shift 2;;				
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
                 --) help_message; exit 1; shift; break ;;
@@ -43,7 +43,7 @@ done
 ########################################################################################################
 
 # loading conda environment
-echo '------- START MODULE TAXONOMY'
+echo '-------> START MODULE TAXONOMY'
 conda activate mSpreadComp_env
 config_path="$(which config)"
 database="${config_path/config/database}"

@@ -7,7 +7,7 @@
 
 #### LITTLE HELP ####
 ## All modules installed here will be named as "name_env"
-## Ex.: deeparg_env
+## Ex.: gtdbtk_env
 
 ################# INSTALLATION'S PRE-CONFIGURATION #################
 
@@ -75,9 +75,6 @@ yes | cp -rf $DEPENDENCIES_SCRIPTS_PATH $mSPREAD_CONDA_ENVIRONMENT_PATH
 
 yes | cp -rf $INSTALLATION_SCRIPTS_PATH $mSPREAD_DEPENDENCIES_PATH
 
-
-conda activate mSpreadComp_env
-core_env="$(echo $PATH | cut -f1 -d':')"
 
 source installation/config
 source installation/installation_utils.sh

@@ -33,7 +33,6 @@ help_message () {
   
 mSpread_lettering
 
-conda activate mSpreadComp_env
 config_path="$(which config)"
 source $config_path
 if [[ $? -ne 0 ]]; then #Tests the exit status of the last command
@@ -50,7 +49,7 @@ fi
 
 if [ "$1" = taxonomy ]; then
 	echo mspreadcomp taxonomy ${@:2}
-	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/taxonomy.sh ${@:2}
+	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/taxonomy.sh ${@:2}
 elif [ "$1" = quality ]; then
 	echo mspreadcomp quality ${@:2}
 	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/quality.sh ${@:2}
@@ -68,8 +67,8 @@ elif [ "$1" = "-v" ] || [ "$1" = "--version" ]; then
 	echo "mSpreadComp v=$VERSION"
 	echo ""
 elif [ "$1" = "--show-config" ]; then
-	comm "mSpreadComp script found in $(which mSpreadComp) and config file was found in $(which config)."
-	comm "Here are the contents of config:"
+	echo "mSpreadComp script found in $(which mSpreadComp) and config file was found in $(which config)."
+	echo -e "\nHere are the contents of config:\n"
 	cat $(which config)
 else
         comm "Please select a proper module of mSpreadComp."
