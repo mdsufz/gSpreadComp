@@ -1,0 +1,7 @@
+#Tracking R packages to install in mSpreadComp_env
+
+optparse
+data.table
+dplyr
+stringr
+tidyr
