@@ -2,13 +2,13 @@
 
 help_message () {
 	echo ""
-	echo "Usage: mspreadcomp quality [options] --genome_dir genome_folder -o output_dir"
+	echo "Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir"
 	echo "Options:"
 	echo ""
-	echo "	--genome_dir STR	folder with the genomes to estimate quality (in fasta format)"
+	echo "	--genome_dir STR	folder with the genomes to be classified (in fasta format)"
 	echo "	--extension STR		fasta file extension (e.g. fa or fasta) [default: fa]"
+	echo "	--threshold NUM		threshold for probability filtering [default: 0.7]"
 	echo "	-o STR				output directory"
-	echo "	-t INT      		number of threads [default: 1]"
 	echo "	-h --help			print this message"
 	echo ""
 	echo "";}
@@ -19,10 +19,10 @@ help_message () {
 ########################################################################################################
 
 # Set defaults
-threads=1; out="false"; genome_dir="false"; extension=fa
+out="false"; genome_dir="false"; extension=fa; threshold=0.7
 
 # load in params
-OPTS=`getopt -o ht:o: --long help,genome_dir:,extension: -- "$@"`
+OPTS=`getopt -o ho: --long help,genome_dir:,extension:,threshold: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
@@ -31,7 +31,7 @@ while true; do
         case "$1" in
                 --genome_dir) genome_dir=$2; shift 2;;
 				--extension) extension=$2; shift 2;;
-				-t) threads=$2; shift 2;;				
+				--threshold) threshold=$2; shift 2;;
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
                 --) help_message; exit 1; shift; break ;;
@@ -40,12 +40,14 @@ while true; do
 done
 
 
+
+
 ######################################################################################################o#
 ########################           MAKING SURE EVERYTHING IS SET UP             ########################
 ########################################################################################################
 
 # loading conda environment
-echo '------- START MODULE Quality Estimation'
+echo '------- START MODULE Plasmid Prediction'
 conda activate mSpreadComp_env
 config_path="$(which config)"
 database="${config_path/config/database}"
@@ -53,38 +55,31 @@ source $config_path
 source $database
 
 # load checkm env
-conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/checkm_env
-
-#Set CheckM DB
-CHECKM_DB="$DATABASES_LOCATION"checkm
-
-echo ${CHECKM_DB} | checkm data setRoot ${CHECKM_DB}
-
+conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/plasflow_env
 
 # check if all parameters are entered
 if [ "$out" = "false" ] || [ "$genome_dir" = "false" ]; then 
 	help_message; exit 1
 fi
 
-if [ -z "$CHECKM_DB" ]; then 
-	echo "No CHECKM database found."
-	echo "Please make sure you installed the CHECKM database and configured its path"
-	echo "You can follow the instructions on the mSpreadComp Github page"
-	help_message; exit 1
-fi
-
-echo "Your CHECKM_DB database is at $CHECKM_DB"
-
-
 ########################################################################################################
 ########################                    BEGIN PIPELINE!                     ########################
 ########################################################################################################
 
-#Run
-if [ -f "$out"/outputcheckm.tsv ];
-then echo "-> Quality check already done. Please check: "$out"/outputcheckm.tsv"
-else
-checkm lineage_wf -t $threads --reduced_tree --tab_table -x $extension -f "$out"/outputcheckm.tsv $genome_dir $out
-fi
+#Run PlasFlow
+
+genomes_path=$(realpath $genome_dir)
+
+for g in $genomes_path/*.$extension; do
+	genome=`rev $g | cut -d'/' -f1 | rev`;
+	mkdir $out/$genome;
+	PlasFlow.py --input $g --output $out/$genome/"$genome"_plasflow_out.tsv --threshold $threshold;
+done
 
 conda deactivate
+
+#Format output
+echo "Formating Plasflow results:"
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasflow_format.r -i $out -o $out
+

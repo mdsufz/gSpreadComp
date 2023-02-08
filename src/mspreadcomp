@@ -24,6 +24,8 @@ help_message () {
 		echo ""
         echo "  taxonomy	Assign taxonomy to genomes using GTDBtk v2"
         echo "  quality		Estimate genome completeness and contamination using CheckM"
+		echo "  plasmid		Predictes if a sequence within a fasta file is a chromosome, plasmid or undetermined using Plasflow"
+		echo "  pathogens	Aligns provided genomes to Virulence Factors databases and format the output"
 		echo "  mspread		Run the main mSpreadComp to compare spread and plasmid-mediated HGT"    
         echo ""
         echo "  --help | -h	show this help message"
@@ -53,6 +55,12 @@ if [ "$1" = taxonomy ]; then
 elif [ "$1" = quality ]; then
 	echo mspreadcomp quality ${@:2}
 	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/quality.sh ${@:2}
+elif [ "$1" = plasmid ]; then
+	echo mspreadcomp plasmid ${@:2}
+	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasmid.sh ${@:2}
+elif [ "$1" = pathogens ]; then
+	echo mspreadcomp pathogens ${@:2}
+	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens.sh ${@:2}
 elif [ "$1" = mspread ]; then
 	echo mspreadcomp mspread ${@:2}
 	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/mspread.sh ${@:2}
