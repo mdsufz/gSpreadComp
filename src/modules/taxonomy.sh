@@ -7,7 +7,7 @@ help_message () {
 	echo ""
 	echo "	--genome_dir STR	folder with the bins to be classified (in fasta format)"
 	echo "	--extension STR		fasta file extension (e.g. fa or fasta) [default: fa]"
-	echo "	-o STR			output directory"
+	echo "	-o STR				output directory"
 	echo "	-t INT      		number of threads"
 	echo ""
 	echo "";}

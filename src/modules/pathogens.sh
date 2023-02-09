@@ -8,6 +8,7 @@ help_message () {
 	echo "	--genome_dir STR	folder with the genomes to be aligned againt Virulence factors (in fasta format)"
 	echo "	--extension STR		fasta file extension (e.g. fa or fasta) [default: fa]"
 	echo "	--evalue NUM		evalue, expect value, threshold as defined by NCBI-BLAST [default: 1e-50]"
+	echo "	-t INT      		number of threads"
 	echo "	-o STR				output directory"
 	echo "	-h --help			print this message"
 	echo ""
@@ -22,7 +23,7 @@ help_message () {
 out="false"; genome_dir="false"; extension=fa; evalue=1e-50
 
 # load in params
-OPTS=`getopt -o ho: --long help,genome_dir:,extension:,threshold: -- "$@"`
+OPTS=`getopt -o ht:o: --long help,genome_dir:,extension:,threshold: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
@@ -32,6 +33,7 @@ while true; do
                 --genome_dir) genome_dir=$2; shift 2;;
 				--extension) extension=$2; shift 2;;
 				--evalue) evalue=$2; shift 2;;
+				-t) threads=$2; shift 2;;
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
                 --) help_message; exit 1; shift; break ;;
@@ -93,7 +95,8 @@ genomes_path=`realpath $genome_dir`
 for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
-	blastx -db VICTORS_DB_PATH \
+	blastx -db $VICTORS_DB_PATH \
+	-num_threads $threads
 	-query $g \
 	-out $out/$genome/${genome/.fa/.out} \
 	-evalue $evalue \
