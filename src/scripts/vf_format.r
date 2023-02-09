@@ -115,6 +115,11 @@ vfdb_merge <- merge.data.frame(x = vfdb_blastx_df_filt,
 vfdb_merge$mag <- gsub(pattern = ".out",
                           replacement = "",
                           x = vfdb_merge$mag)
+						  
+						  
+vfdb_merge$mag <- gsub(pattern = "vfdb_",
+                                   replacement = "",
+                                   x = vfdb_merge$mag)
 
 
 
@@ -126,6 +131,10 @@ victors_merge <- merge.data.frame(x = victors_blastx_df_filt,
                  by.y = "header_id")
 
 victors_merge$mag <- gsub(pattern = ".out",
+                                   replacement = "",
+                                   x = victors_merge$mag)
+
+victors_merge$mag <- gsub(pattern = "victors_",
                                    replacement = "",
                                    x = victors_merge$mag)
 
@@ -161,8 +170,8 @@ victors_count <- victors_merge %>%
   as.data.frame(.)
 
 #6.1) Save count tables to file
-data.table::fwrite(vfdb_count, file=paste0(out.path, "/vfdb_per_genome_unique_count.csv")
-data.table::fwrite(victors_count, file=paste0(out.path, "/victors_per_genome_unique_count.csv")
+data.table::fwrite(vfdb_count, file=paste0(out.path, "/vfdb_per_genome_unique_count.csv"))
+data.table::fwrite(victors_count, file=paste0(out.path, "/victors_per_genome_unique_count.csv"))
 
 
 
