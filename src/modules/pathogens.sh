@@ -96,7 +96,7 @@ for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
 	blastx -db $VICTORS_DB_PATH \
-	-num_threads $threads
+	-num_threads $threads \
 	-query $g \
 	-out $out/$genome/${genome/.fa/.out} \
 	-evalue $evalue \
