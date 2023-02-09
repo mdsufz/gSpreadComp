@@ -92,22 +92,59 @@ echo "Your VFDB database is at $VFDB_DB_PATH"
 
 genomes_path=`realpath $genome_dir`
 
+num_files=$(ls $$genomes_path/*.$extension | wc -l)
+counter=1
+
 for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
+	
 	blastx -db $VICTORS_DB_PATH \
 	-num_threads $threads \
 	-query $g \
-	-out $out/$genome/${genome/.fa/.out} \
+	-out $out/$genome/victors_${genome/.fa/.out} \
 	-evalue $evalue \
 	-outfmt "6 qseqid sallseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qcovhsp"
+	
+	blastx -db $VFDB_DB_PATH \
+	-num_threads $threads \
+	-query $g \
+	-out $out/$genome/vfdb_${genome/.fa/.out} \
+	-evalue $evalue \
+	-outfmt "6 qseqid sallseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qcovhsp"
+	
+	#Add file name column
+	#Victors
+	name="$(basename -- $out/$genome/victors*.out)"
+    sed -i "s/$/\t$name/" $out/$genome/victors*.out
+	
+	#VFDB
+	name="$(basename -- $out/$genome/vfdb*.out)"
+    sed -i "s/$/\t$name/" $out/$genome/vfdb*.out
+	
+	# Update the progress bar
+	percent=$((100 * $counter / $num_files))
+	printf "\rProgress: [%3d%%] File: %s" $percent $file
+	((counter++))
 
 done
+
+echo ""
+echo "VF - Done!"
 
 conda deactivate
 
 #Format output
-#echo "Formatting Virulence Factors results:"
-#
+echo "Formatting Virulence Factors results:"
+
+for f in $out/*/victors*.out; do
+    cat $f >> $out/victors_merged.out
+done
+
+for f in $out/*/vfdb*.out; do
+    cat $f >> $out/vfdb_merged.out
+done
+
+
 #Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasflow_format.r -i $out -o $out
 
