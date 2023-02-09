@@ -83,7 +83,6 @@ fi
 echo "Your Victors database is at $VICTORS_DB_PATH"
 echo "Your VFDB database is at $VFDB_DB_PATH"
 
-
 ########################################################################################################
 ########################                    BEGIN PIPELINE!                     ########################
 ########################################################################################################
@@ -92,12 +91,13 @@ echo "Your VFDB database is at $VFDB_DB_PATH"
 
 genomes_path=`realpath $genome_dir`
 
-num_files=$(ls $$genomes_path/*.$extension | wc -l)
+num_files=$(ls $genomes_path/*.$extension | wc -l)
 counter=1
 
 for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
+	
 	
 	blastx -db $VICTORS_DB_PATH \
 	-num_threads $threads \
@@ -124,7 +124,7 @@ for g in $genomes_path/*.$extension; do
 	
 	# Update the progress bar
 	percent=$((100 * $counter / $num_files))
-	printf "\rProgress: [%3d%%] File: %s" $percent $file
+	printf "\rProgress: [%3d%%] File: %s" $percent $genome
 	((counter++))
 
 done
@@ -145,6 +145,14 @@ for f in $out/*/vfdb*.out; do
     cat $f >> $out/vfdb_merged.out
 done
 
+#Save DBs headers
+#Save DB headers
 
-#Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasflow_format.r -i $out -o $out
+cat $VICTORS_DB_PATH | grep ">" > $out/victors_db_headers.txt
+cat $VFDB_DB_PATH | grep ">" >  $out/vfdb_headers.txt
+
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/vf_format.r --victors $out/victors_merged.out --vfdb $out/vfdb_merged.out --vic_header $out/victors_db_headers.txt --vfdb_header $out/vfdb_headers.txt -o $out
+
+
 
