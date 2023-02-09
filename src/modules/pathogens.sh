@@ -2,7 +2,7 @@
 
 help_message () {
 	echo ""
-	echo "Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir"
+	echo "Usage: mspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir"
 	echo "Options:"
 	echo ""
 	echo "	--genome_dir STR	folder with the genomes to be aligned againt Virulence factors (in fasta format)"
