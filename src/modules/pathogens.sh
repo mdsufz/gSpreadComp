@@ -5,9 +5,9 @@ help_message () {
 	echo "Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir"
 	echo "Options:"
 	echo ""
-	echo "	--genome_dir STR	folder with the genomes to be classified (in fasta format)"
+	echo "	--genome_dir STR	folder with the genomes to be aligned againt Virulence factors (in fasta format)"
 	echo "	--extension STR		fasta file extension (e.g. fa or fasta) [default: fa]"
-	echo "	--threshold NUM		threshold for probability filtering [default: 0.7]"
+	echo "	--evalue NUM		evalue, expect value, threshold as defined by NCBI-BLAST [default: 1e-50]"
 	echo "	-o STR				output directory"
 	echo "	-h --help			print this message"
 	echo ""
@@ -19,7 +19,7 @@ help_message () {
 ########################################################################################################
 
 # Set defaults
-out="false"; genome_dir="false"; extension=fa; threshold=0.7
+out="false"; genome_dir="false"; extension=fa; evalue=1e-50
 
 # load in params
 OPTS=`getopt -o ho: --long help,genome_dir:,extension:,threshold: -- "$@"`
@@ -31,7 +31,7 @@ while true; do
         case "$1" in
                 --genome_dir) genome_dir=$2; shift 2;;
 				--extension) extension=$2; shift 2;;
-				--threshold) threshold=$2; shift 2;;
+				--evalue) evalue=$2; shift 2;;
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
                 --) help_message; exit 1; shift; break ;;
@@ -40,46 +40,71 @@ while true; do
 done
 
 
-
-
 ######################################################################################################o#
 ########################           MAKING SURE EVERYTHING IS SET UP             ########################
 ########################################################################################################
 
 # loading conda environment
-echo '------- START MODULE Plasmid Prediction'
+echo '-------> START MODULE PATHOGENS'
 conda activate mSpreadComp_env
 config_path="$(which config)"
 database="${config_path/config/database}"
 source $config_path
 source $database
 
-# load checkm env
-conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/plasflow_env
+# load blast env
+conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/blast_env
+
+# Load databases paths
+VICTORS_DB_PATH="$DATABASES_LOCATION"victors/gen_downloads_protein.php
+VFDB_DB_PATH="$DATABASES_LOCATION"vfdb/VFDB_setB_pro.fas
 
 # check if all parameters are entered
 if [ "$out" = "false" ] || [ "$genome_dir" = "false" ]; then 
 	help_message; exit 1
 fi
 
+if [ -z "$VICTORS_DB_PATH" ]; then 
+	echo "No Victors database found."
+	echo "Please make sure you installed the Victors database and configured its path"
+	echo "You can follow the instructions on the mSpreadComp Github page"
+	help_message; exit 1
+fi
+
+if [ -z "$VFDB_DB_PATH" ]; then 
+	echo "No VFDB database found."
+	echo "Please make sure you installed the VFDB database and configured its path"
+	echo "You can follow the instructions on the mSpreadComp Github page"
+	help_message; exit 1
+fi
+
+echo "Your Victors database is at $VICTORS_DB_PATH"
+echo "Your VFDB database is at $VFDB_DB_PATH"
+
+
 ########################################################################################################
 ########################                    BEGIN PIPELINE!                     ########################
 ########################################################################################################
 
-#Run PlasFlow
+#Run VF count
 
 genomes_path=`realpath $genome_dir`
 
 for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
-	PlasFlow.py --input $g --output $out/$genome/"$genome"_plasflow_out.tsv --threshold $threshold;
+	blastx -db VICTORS_DB_PATH \
+	-query $g \
+	-out $out/$genome/${genome/.fa/.out} \
+	-evalue $evalue \
+	-outfmt "6 qseqid sallseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qcovhsp"
+
 done
 
 conda deactivate
 
 #Format output
-echo "Formatting Plasflow results:"
-
-Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasflow_format.r -i $out -o $out
+#echo "Formatting Virulence Factors results:"
+#
+#Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasflow_format.r -i $out -o $out
 

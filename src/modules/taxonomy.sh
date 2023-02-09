@@ -28,8 +28,8 @@ if [ $? -ne 0 ]; then help_message; exit 1; fi
 while true; do
         case "$1" in
                 --genome_dir) genome_dir=$2; shift 2;;
-		--extension) extension=$2; shift 2;;
-		-t) threads=$2; shift 2;;				
+				--extension) extension=$2; shift 2;;
+				-t) threads=$2; shift 2;;				
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
                 --) help_message; exit 1; shift; break ;;

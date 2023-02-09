@@ -71,11 +71,11 @@ elif [ "$1" = gene_annotation ]; then
 elif [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 	help_message
 elif [ "$1" = "-v" ] || [ "$1" = "--version" ]; then
-        echo ""
+	echo ""
 	echo "mSpreadComp v=$VERSION"
 	echo ""
 elif [ "$1" = "--show-config" ]; then
-	echo "mSpreadComp script found in $(which mSpreadComp) and config file was found in $(which config)."
+	echo "mSpreadComp script found in $(which mspreadcomp) and config file was found in $(which config)."
 	echo -e "\nHere are the contents of config:\n"
 	cat $(which config)
 else

@@ -96,7 +96,7 @@ yes | cp -rf $(dirname $0)/config  $mSPREAD_CONDA_ENVIRONMENT_PATH/bin
 echo -e "\n### WELCOME TO mSpreadComp! ###\n"
 echo "Do you want to install the complete mSpreadComp pipeline?"
 echo "- Main: mSpreadComp metagenome analysis workflow"
-echo "- Accessory: Antimicrobial genes annotation with DeepARG"
+echo "- Accessory: Antimicrobial genes annotation with DeepARG [Current inactive]"
 echo "- Accessory: Taxonomical assigning with GTDB-tk"
 echo "- Accessory: Genome Quality estimation with CheckM"
 echo "[Y/N]"
