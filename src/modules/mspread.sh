@@ -10,6 +10,7 @@ help_message () {
 	echo "	--gtdbtk	STR		Path to the formatted Taxonomy assignment dataframe"
 	echo "	--meta		STR		Path to the formatted Sample's Metadata dataframe"
 	echo "	--vf		STR		Path to the formatted Virulence Factors assignment dataframe"
+	echo "	--nmag		INT		Minimum number of Genomes per Library accepted [default=0]"
 	echo "	-t			INT		number of threads"
 	echo "	-o			STR		output directory"
 	echo "	-h --help			print this message"
@@ -22,10 +23,10 @@ help_message () {
 ########################################################################################################
 
 # Set defaults
-out="false"; checkm="false"; gene="false"; gtdbtk="false"; meta="false"; vf="false"
+out="false"; checkm="false"; gene="false"; gtdbtk="false"; meta="false"; vf="false";nmag=0
 
 # load in params
-OPTS=`getopt -o ht:o: --long help,checkm:,gene:,gtdbtk:,meta:,vf: -- "$@"`
+OPTS=`getopt -o ht:o: --long help,checkm:,gene:,gtdbtk:,meta:,vf:,nmag: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
@@ -37,6 +38,7 @@ while true; do
 				--gtdbtk) gtdbtk=$2; shift 2;;
 				--meta) meta=$2; shift 2;;
 				--vf) vf=$2; shift 2;;
+				--nmag) nmag=$2; shift 2;;
 				-t) threads=$2; shift 2;;
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
@@ -58,35 +60,6 @@ database="${config_path/config/database}"
 source $config_path
 source $database
 
-# load blast env
-conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/blast_env
-
-# Load databases paths
-VICTORS_DB_PATH="$DATABASES_LOCATION"victors/gen_downloads_protein.php
-VFDB_DB_PATH="$DATABASES_LOCATION"vfdb/VFDB_setB_pro.fas
-
-# check if all parameters are entered
-if [ "$out" = "false" ] || [ "$genome_dir" = "false" ]; then 
-	help_message; exit 1
-fi
-
-if [ -z "$VICTORS_DB_PATH" ]; then 
-	echo "No Victors database found."
-	echo "Please make sure you installed the Victors database and configured its path"
-	echo "You can follow the instructions on the mSpreadComp Github page"
-	help_message; exit 1
-fi
-
-if [ -z "$VFDB_DB_PATH" ]; then 
-	echo "No VFDB database found."
-	echo "Please make sure you installed the VFDB database and configured its path"
-	echo "You can follow the instructions on the mSpreadComp Github page"
-	help_message; exit 1
-fi
-
-echo "Your Victors database is at $VICTORS_DB_PATH"
-echo "Your VFDB database is at $VFDB_DB_PATH"
-
 ########################################################################################################
 ########################                    BEGIN PIPELINE!                     ########################
 ########################################################################################################
@@ -94,9 +67,16 @@ echo "Your VFDB database is at $VFDB_DB_PATH"
 ### Normalize and Describe sample only Mags vs Target meta ####
 
 
-
 ### Perform Complete-Contamination analysis ####
 
+echo "Genome Quality description and Gene normalization started!"
+initial_processing_path=`realpath $out`
+
+mkdir $initial_processing_path
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk --checkm $checkm --gene $gene --meta $meta --nmag_filter $nmag --out $initial_processing_path
+
+echo "Genome Quality description and Gene normalization finished!"
 
 
 ### Perform Beta dispersion analysis ####
