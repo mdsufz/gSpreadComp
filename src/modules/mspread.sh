@@ -70,8 +70,8 @@ source $database
 ### Perform Complete-Contamination analysis ####
 
 echo "Genome Quality description and Gene normalization started!"
-initial_processing_path=`realpath $out`
-
+out=`realpath $out`
+initial_processing_path=$out/genome_quality_norm
 mkdir $initial_processing_path
 
 Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk --checkm $checkm --gene $gene --meta $meta --nmag_filter $nmag --out $initial_processing_path
