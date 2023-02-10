@@ -151,8 +151,8 @@ victors_merge <- victors_merge %>%
   rename(Genome = mag, Victor_VF_found = sseqid, Victor_VF_class = header_class)
 
 
-data.table::fwrite(victors_merge, file=paste0(out.path, "/victors_e_50_ann_format.csv"))
-data.table::fwrite(vfdb_merge, file=paste0(out.path, "/vfdb_e_50_ann_format.csv"))
+data.table::fwrite(victors_merge, file=paste0(out.path, "/victors_ann_format.csv"))
+data.table::fwrite(vfdb_merge, file=paste0(out.path, "/vfdb_ann_format.csv"))
 
 #6) Count number of Unique Virulence factors in each bin
 
