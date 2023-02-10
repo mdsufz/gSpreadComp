@@ -5,3 +5,7 @@ data.table
 dplyr
 stringr
 tidyr
+ggplot2
+viridis
+hrbrthemes
+ggforce
