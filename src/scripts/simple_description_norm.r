@@ -235,8 +235,8 @@ for (t in target_classes) {
   )
   
   # create histogram with number of args per mag
-  #pdf(file = paste0(out.path, "/target_gene_per_genome_hist_", t, "_plot.pdf"),
-  #    height = 8.27, width = 11.69)
+  pdf(file = paste0(out.path, "/target_gene_per_genome_hist_", t, "_plot.pdf"),
+      height = 8.27, width = 11.69)
   
   print(
   ggplot(mag.gene.cnt, aes(x = unique.gene)) + 
@@ -251,7 +251,7 @@ for (t in target_classes) {
     ggtitle(t)
   )
   
-  #dev.off()
+  dev.off()
   
   # average number of Target Gene per gOTU MAGs
   avg_t <- mean(mag.gene.cnt$unique.gene)
