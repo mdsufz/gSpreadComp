@@ -90,7 +90,7 @@ mags_data <- merge.data.frame(x = mags_data,
                               by = "Genome")
 
 
-target_classes <- as.vector(unique(mags_data$Target))
+target_classes <- sort(as.vector(unique(mags_data$Target)))
 
 #3) create plot of mag quality
 mags_data <- as.data.frame(mags_data)
@@ -152,7 +152,7 @@ mag.completeness.hist <- ggplot(mags_data, aes(x = Completeness, fill = cut(Comp
   coord_flip() +
   theme(strip.text = element_blank(), strip.background = element_blank())
 
-mag.completeness.hist
+#mag.completeness.hist
 
 mag.contamination.hist <- ggplot(mags_data, aes(x = Contamination, fill = cut(Contamination, 100))) + 
   geom_histogram(bins = 200, show.legend = FALSE) +
@@ -162,7 +162,7 @@ mag.contamination.hist <- ggplot(mags_data, aes(x = Contamination, fill = cut(Co
   theme_void() +
   theme(strip.text = element_blank(), strip.background = element_blank())
 
-mag.contamination.hist
+#mag.contamination.hist
 
 #2) Filter out samples based on number of MAGs
 #Calculate total number of bins recovered per sample
@@ -227,14 +227,16 @@ for (t in target_classes) {
   
   mag.gene.cnt <- as.data.frame(
     gene_df %>%
+      merge.data.frame(.,
+                       mags_data[,c("Genome", "Target")]) %>%
       filter(Target == t) %>%
       group_by(Genome) %>% 
       summarize(unique.gene = n_distinct(across(all_of(target_gene)), na.rm = T))
   )
   
   # create histogram with number of args per mag
-  pdf(file = paste0(out.path, "/target_gene_per_genome_hist_", t, "_plot.pdf"),
-      height = 8.27, width = 11.69)
+  #pdf(file = paste0(out.path, "/target_gene_per_genome_hist_", t, "_plot.pdf"),
+  #    height = 8.27, width = 11.69)
   
   print(
   ggplot(mag.gene.cnt, aes(x = unique.gene)) + 
@@ -249,7 +251,7 @@ for (t in target_classes) {
     ggtitle(t)
   )
   
-  dev.off()
+  #dev.off()
   
   # average number of Target Gene per gOTU MAGs
   avg_t <- mean(mag.gene.cnt$unique.gene)
@@ -278,7 +280,6 @@ write.csv(x = mags.per.sample.gene.prev, file = paste0(out.path, "/gene_prevalen
 write.csv(x = avg_unique_genes, file = paste0(out.path, "/avg_unique_gene_per_target.csv"), row.names = F)
 
 #Figures
-target_classes <- sort(target_classes)
 ###
 for (i in 1:length(target_classes)) {
   
