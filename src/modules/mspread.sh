@@ -11,6 +11,7 @@ help_message () {
 	echo "	--meta		STR		Path to the formatted Sample's Metadata dataframe"
 	echo "	--vf		STR		Path to the formatted Virulence Factors assignment dataframe"
 	echo "	--nmag		INT		Minimum number of Genomes per Library accepted [default=0]"
+	echo "	--spread_taxa	STR	Taxonomic level to check gene spread [default=Phylum]"
 	echo "	-t			INT		number of threads"
 	echo "	-o			STR		output directory"
 	echo "	-h --help			print this message"
@@ -23,10 +24,10 @@ help_message () {
 ########################################################################################################
 
 # Set defaults
-out="false"; checkm="false"; gene="false"; gtdbtk="false"; meta="false"; vf="false";nmag=0
+out="false"; checkm="false"; gene="false"; gtdbtk="false"; meta="false"; vf="false";nmag=0;spread_taxa="Phylum"
 
 # load in params
-OPTS=`getopt -o ht:o: --long help,checkm:,gene:,gtdbtk:,meta:,vf:,nmag: -- "$@"`
+OPTS=`getopt -o ht:o: --long help,checkm:,gene:,gtdbtk:,meta:,vf:,nmag:,spread_taxa: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
@@ -39,6 +40,7 @@ while true; do
 				--meta) meta=$2; shift 2;;
 				--vf) vf=$2; shift 2;;
 				--nmag) nmag=$2; shift 2;;
+				--spread_taxa) spread_taxa=$2; shift 2;;
 				-t) threads=$2; shift 2;;
                 -o) out=$2; shift 2;;
                 -h | --help) help_message; exit 1; shift 1;;
@@ -74,7 +76,12 @@ out=`realpath $out`
 initial_processing_path=$out/genome_quality_norm
 mkdir $initial_processing_path
 
-Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk --checkm $checkm --gene $gene --meta $meta --nmag_filter $nmag --out $initial_processing_path
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk \
+ --checkm $checkm \
+ --gene $gene \
+ --meta $meta \
+ --nmag_filter $nmag \
+ --out $initial_processing_path
 
 echo "Genome Quality description and Gene normalization finished!"
 
@@ -87,9 +94,21 @@ echo "Genome Quality description and Gene normalization finished!"
 
 
 
-### Perform ARG prevelance analysis and spread per gOTU ####
+### Perform Gene prevelance spread per gOTU ####
 
+echo "Gene prevelance spread per gOTU started!"
+out=`realpath $out`
+gene_spread_path=$out/gene_spread_results
+mkdir $gene_spread_path
 
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gene_gotu_spread.r --mags_data $initial_processing_path/genome_data_merged.csv \
+ --selected_lib $initial_processing_path/selected_samples.csv \
+ --gene $gene \
+ --norm_gene_prev $initial_processing_path/gene_prevalence_per_library.csv \
+ --spread_taxa $spread_taxa \
+ --out $gene_spread_path
+
+echo "Gene prevelance spread per gOTU finished!"
 
 ### Perform NMI figures ####
 
