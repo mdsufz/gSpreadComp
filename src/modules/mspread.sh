@@ -56,7 +56,7 @@ done
 
 # loading conda environment
 echo '-------> START MODULE mSpread'
-conda activate mSpreadComp_env
+#conda activate mSpreadComp_env
 config_path="$(which config)"
 database="${config_path/config/database}"
 source $config_path

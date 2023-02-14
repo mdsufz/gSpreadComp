@@ -2,7 +2,7 @@
 
 #Test path
 
-setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
+#setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
 
 #Select Samples based on number of MAGs recovered
 #Describe MAGs and Save figures

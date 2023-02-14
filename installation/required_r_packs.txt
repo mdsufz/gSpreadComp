@@ -9,3 +9,4 @@ ggplot2
 viridis
 hrbrthemes
 ggforce
+pheatmap
