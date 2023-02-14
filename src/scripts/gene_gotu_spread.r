@@ -42,26 +42,25 @@ option_list = list(
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
 
-# out.path <- opt$out
-# mags_data_df <- data.table::fread(opt$mags_data)
-# selected_lib <- data.table::fread(opt$selected_lib)
-# gene_df <- data.table::fread(opt$gene)
-# norm_gene_prev_df <- data.table::fread(opt$norm_gene_prev)
-# tax_level <- opt$spread_taxa
+out.path <- opt$out
+mags_data_df <- data.table::fread(opt$mags_data)
+selected_lib <- data.table::fread(opt$selected_lib)
+gene_df <- data.table::fread(opt$gene)
+norm_gene_prev_df <- data.table::fread(opt$norm_gene_prev)
+tax_level <- opt$spread_taxa
 
 #target_gene <- "Gene_id"
 target_gene <- "Gene_class"
 
 #### TEST INPUT ####
 
-mags_data_df <- data.table::fread("test_output/genome_quality_norm/genome_data_merged.csv")
-selected_lib <- data.table::fread("test_output/genome_quality_norm/selected_samples.csv")
-gene_df <- data.table::fread("test_data/deeparg_df_format_mSpread.csv")
-norm_gene_prev_df <- data.table::fread("test_output/genome_quality_norm/gene_prevalence_per_library.csv")
+#mags_data_df <- data.table::fread("test_output/genome_quality_norm/genome_data_merged.csv")
+#selected_lib <- data.table::fread("test_output/genome_quality_norm/selected_samples.csv")
+#gene_df <- data.table::fread("test_data/deeparg_df_format_mSpread.csv")
+#norm_gene_prev_df <- data.table::fread("test_output/genome_quality_norm/gene_prevalence_per_library.csv")
 
-tax_level <- "Phylum"
-
-out.path <- "test_output"
+#tax_level <- "Phylum"
+#out.path <- "test_output"
 
 #### Process initial load data ####
 
