@@ -16,6 +16,7 @@ library("ggplot2")
 library("data.table")
 library("viridis")
 library("pheatmap")
+library("forcats")
 
 #library("patchwork")
 #library("gridExtra")
@@ -35,6 +36,8 @@ option_list = list(
               help="Normalized gene prevalence per library", metavar="character"),
   make_option(c("--spread_taxa"), type="character", default=NULL, 
               help="Taxa level to use calculate gene spread [default: Phylum]", metavar="character"),
+  make_option(c("--target_gene_col"), type="character", default=NULL, 
+              help="Name of the Target Gene column [default: Gene_id]", metavar="character"),
   make_option(c("-o", "--out"), type="character",
               help="output directory path to save formated files", metavar="character")
 ); 
@@ -48,9 +51,10 @@ selected_lib <- data.table::fread(opt$selected_lib)
 gene_df <- data.table::fread(opt$gene)
 norm_gene_prev_df <- data.table::fread(opt$norm_gene_prev)
 tax_level <- opt$spread_taxa
+target_gene <- opt$target_gene_col
 
 #target_gene <- "Gene_id"
-target_gene <- "Gene_class"
+#target_gene <- "Gene_class"
 
 #### TEST INPUT ####
 
@@ -205,6 +209,34 @@ for (t in target_classes) {
   
   dev.off()
   
+  # number of gotus with arg
+  tmp1 <- as.data.frame(gene.tax %>%
+                          group_by(across(all_of(target_gene))) %>% 
+                          summarize(n.gotus = n_distinct(unique_group)))
+  
+  tmp1$wap <- wap[match(tmp1[, target_gene], names(wap))]
+  
+  
+  
+  pdf(file = paste0(out.path,"/gOTUs_per_target_gene_barplot_", tax_level, "_", t, ".pdf"),
+      width = 8.27, height = 11.69)
+  
+  print(
+  
+  ggplot(tmp1, aes(x = reorder(get(target_gene), n.gotus, sum), y = n.gotus, fill = wap)) + 
+    geom_col() +
+    scale_fill_gradientn(colors = magma(100), values = breaksList) + 
+    theme(text = element_text(size = 16),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank()) +
+    labs(x = "", y = "Number of gOTUs", fill = "Prevalence") +
+    coord_flip() +
+    ggtitle(t)
+  
+  )
+  
+  dev.off()
+  
   #Save prev matrix and WAP vector to file
 
   write.csv(x = gene.tax.cnt, file = paste0(out.path, "/gene_prevalence_per_gOTU_", tax_level, "_", t, ".csv"), row.names = F)
@@ -213,7 +245,6 @@ for (t in target_classes) {
   
   
 }
-
 
 
 

@@ -20,6 +20,19 @@ library("gridExtra")
 library("ggforce")
 
 
+#target_gene <- "Gene_id"
+#target_gene <- "Gene_class"
+
+#Young samples to remove -> REMOVE ON THE FINAL VERSION
+
+young_samples <- c("EA_SRX3062589", "EA_SRX3062590", "EA_SRX3062593", "EA_SRX3062617", "EA_SRX3062647", 
+                   "EA_SRX3062648", "EA_SRX3062649", "EA_SRX3062650", "EA_SRX3062651", "EA_SRX3062652", 
+                   "EA_SRX3062653", "EA_SRX3062654", "EA_SRX3062655", "EA_SRX3062656", "EA_SRX3062657", 
+                   "EA_SRX3062658", "EA_SRX3062660", "EA_SRX3062661", "EA_SRX3062662", "EA_SRX3062663", 
+                   "EA_SRX3062664")
+
+####
+
 option_list = list(
   make_option(c("--gtdb"), type="character", default=NULL, 
               help="GTDB-tk Taxa classification file path", metavar="character"),
@@ -31,6 +44,8 @@ option_list = list(
               help="Library metadata file path", metavar="character"),
   make_option(c("--nmag_filter"), type="integer", default=0, 
               help="Minimum number of mags per Library. [default = 0]", metavar="character"),
+  make_option(c("--target_gene_col"), type="character", default=NULL, 
+              help="Name of the Target Gene column [default: Gene_id]", metavar="character"),
   make_option(c("-o", "--out"), type="character",
               help="output directory path to save formated tables", metavar="character")
 ); 
@@ -44,14 +59,7 @@ checkm_df <- data.table::fread(opt$checkm)
 gene_df <- data.table::fread(opt$gene)
 meta_df <- data.table::fread(opt$meta)
 n_mag <- opt$nmag_filter
-
-#Young samples to remove -> REMOVE ON THE FINAL VERSION
-
-young_samples <- c("EA_SRX3062589", "EA_SRX3062590", "EA_SRX3062593", "EA_SRX3062617", "EA_SRX3062647", 
-           "EA_SRX3062648", "EA_SRX3062649", "EA_SRX3062650", "EA_SRX3062651", "EA_SRX3062652", 
-           "EA_SRX3062653", "EA_SRX3062654", "EA_SRX3062655", "EA_SRX3062656", "EA_SRX3062657", 
-           "EA_SRX3062658", "EA_SRX3062660", "EA_SRX3062661", "EA_SRX3062662", "EA_SRX3062663", 
-           "EA_SRX3062664")
+target_gene <- opt$target_gene_col
 
 
 #1) Load metadata, mags taxa, and mags quality
@@ -200,9 +208,9 @@ mags.per.sample.gene.prev <- gene_df %>%
   merge.data.frame(.,
                    meta_df,
                    by = "Genome") %>%
-  select(Library, Gene_id, Genome) %>%
+  select(Library, all_of(target_gene), Genome) %>%
   unique(.) %>%
-  group_by(Library, Gene_id) %>%
+  group_by(Library, across(all_of(target_gene))) %>%
   mutate(present.gene = n()) %>%
   select(-Genome) %>%
   unique(.) %>%
@@ -210,6 +218,48 @@ mags.per.sample.gene.prev <- gene_df %>%
                    mags.per.sample,
                    by = "Library") %>%
   mutate(gene.genome.prev = present.gene/t_mags)
+
+##########
+# count number of unique args per mag
+avg_unique_genes <- tibble()
+
+for (t in target_classes) {
+  
+  mag.gene.cnt <- as.data.frame(
+    gene_df %>%
+      filter(Target == t) %>%
+      group_by(Genome) %>% 
+      summarize(unique.gene = n_distinct(across(all_of(target_gene)), na.rm = T))
+  )
+  
+  # create histogram with number of args per mag
+  pdf(file = paste0(out.path, "/target_gene_per_genome_hist_", t, "_plot.pdf"),
+      height = 8.27, width = 11.69)
+  
+  print(
+  ggplot(mag.gene.cnt, aes(x = unique.gene)) + 
+    geom_histogram(binwidth = 1, color = "darkcyan", fill = "darkturquoise") + 
+    theme_bw() + 
+    theme(
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(),
+      text = element_text(size = 20)
+    ) +
+    labs(x = "Number of Unique Target Genes per MAG", y = "Number of MAGs") +
+    ggtitle(t)
+  )
+  
+  dev.off()
+  
+  # average number of Target Gene per gOTU MAGs
+  avg_t <- mean(mag.gene.cnt$unique.gene)
+  sd_t <- sd(mag.gene.cnt$unique.gene)
+  
+  avg_unique_genes <- rbind.data.frame(avg_unique_genes, c(t, avg_t, sd_t))
+
+}
+names(avg_unique_genes) <- c("Target", "Avg_unique_target_gene", "Standard_deviation")
+
 
 #Save Figures and Objects to files
 
@@ -224,20 +274,14 @@ write.csv(x = samples.fil, file = paste0(out.path, "/selected_samples.csv"), row
 ##Prev gene table
 write.csv(x = mags.per.sample.gene.prev, file = paste0(out.path, "/gene_prevalence_per_library.csv"), row.names = F)
 
+##Avg unique gene per target table
+write.csv(x = avg_unique_genes, file = paste0(out.path, "/avg_unique_gene_per_target.csv"), row.names = F)
+
 #Figures
 target_classes <- sort(target_classes)
 ###
 for (i in 1:length(target_classes)) {
   
-  #print(
-  #  mag.scatter + facet_wrap_paginate(~Target, ncol = 1, nrow = 1, page = i)
-  #)
-
-###
-  #print(
-  #  mag.scatter.quality + facet_wrap_paginate(~Target, ncol = 1, nrow = 1, page = i)
-  #)
-###
   pdf(paste0(out.path, "/quality_scatter_", target_classes[i], "_plot.pdf"),
       width = 7, height = 5)
   
