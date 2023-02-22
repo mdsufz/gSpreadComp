@@ -10,3 +10,4 @@ viridis
 hrbrthemes
 ggforce
 pheatmap
+purrr

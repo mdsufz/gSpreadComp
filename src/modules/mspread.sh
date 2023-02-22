@@ -95,6 +95,22 @@ echo "Genome Quality description and Gene normalization finished!"
 
 ### Perform pairwise analysis irrespective o taxa ####
 
+echo "Gene per Target pairwise comparison started!"
+out=`realpath $out`
+gene_pair_path=$out/gene_pairwise_comp_results
+mkdir $gene_pair_path
+
+mkdir $gene_pair_path/pairwise_per_gene_boxplots
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gene_pairwise_comp.r --mags_data $initial_processing_path/genome_data_merged.csv \
+ --selected_lib $initial_processing_path/selected_samples.csv \
+ --gene $gene \
+ --norm_gene_prev $initial_processing_path/gene_prevalence_per_library.csv \
+ --spread_taxa $spread_taxa \
+ --target_gene_col $target_gene_col \
+ --out $$gene_pair_path
+
+echo "Gene per Target pairwise comparison finished!"
 
 
 ### Perform Gene prevelance spread per gOTU ####
@@ -118,16 +134,15 @@ echo "Gene prevelance spread per gOTU finished!"
 
 
 
-
-### Perform Plasmid description ####
-
-
-
-### Perform Pathogens description ####
+### Perform Plasmid - Gene description ####
 
 
 
-### Perform Network Analysis ####
+### Perform Pathogens - Gene description ####
+
+
+
+### Perform HGT Network Analysis ####
 
 
 
