@@ -108,7 +108,7 @@ Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gene_pairwise_comp.r --mags_data $in
  --norm_gene_prev $initial_processing_path/gene_prevalence_per_library.csv \
  --spread_taxa $spread_taxa \
  --target_gene_col $target_gene_col \
- --out $$gene_pair_path
+ --out $gene_pair_path
 
 echo "Gene per Target pairwise comparison finished!"
 
