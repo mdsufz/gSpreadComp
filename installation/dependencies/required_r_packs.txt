@@ -11,3 +11,5 @@ hrbrthemes
 ggforce
 pheatmap
 purrr
+rstatix
+ggpubr

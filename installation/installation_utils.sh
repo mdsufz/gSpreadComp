@@ -79,21 +79,23 @@ verify_if_main_env_exists() {
 }
 
 coffe_time(){
-echo -e '\n\n'
-echo '								'
-echo '      (  )   (   )  )			'
-echo '       ) (   )  (  (			'	
-echo '       ( )  (    ) )			'
-echo '       _____________			'
-echo '      <_____________> ___		'
-echo '      |             |/ _ \		'
-echo '      |               | | |		'	
-echo '      |               |_| |		'
-echo '   ___|             |\___/		'
-echo '  /    \___________/    \		'	
-echo '  \_____________________/		'
+echo -e '\n\n'   
+echo '    ██    ██    ██          '
+echo '   ██      ██  ██           '
+echo '   ██    ██    ██           '
+echo '     ██  ██      ██         '
+echo '     ██    ██    ██         '
+echo '  ████████████████████      '
+echo '  ██                ██████  '
+echo '  ██                ██  ██  '
+echo '  ██                ██  ██  '
+echo '  ██                ██████  '
+echo '    ██            ██        '
+echo ' ████████████████████████   '
+echo ' ██                    ██   '
+echo '   ████████████████████     '
 
-echo -e '\n	This might take a while. Time to grab a coffee...\n'
+echo -e '\n	Time to grab a coffee...\n'
 sleep 3
 }
 
