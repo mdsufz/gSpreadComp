@@ -10,7 +10,7 @@ library("tidyr")
 
 option_list = list(
   make_option(c("-i", "--input"), type="character", default=NULL, 
-              help="Path to the created Plasflow results directories", metavar="character"),
+              help="Path to the created DeepARG results directories", metavar="character"),
   make_option(c("-o", "--out"), type="character",
               help="output directory path to save formated tables", metavar="character")
 ); 
@@ -27,7 +27,7 @@ setwd(wd.path)
 
 files <- dir(recursive=TRUE,
              full.names=TRUE,
-             pattern="\\_plasflow_out.tsv$")
+             pattern="\\.mapping.ARG$")
 
 
 #Start dataframe wth one example

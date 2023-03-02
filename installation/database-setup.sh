@@ -72,20 +72,19 @@ if [ "$active_module" = "all" ]; then
 	cd -
 	
 	### DeepARG
-	#Error accessing data - server seems dead
-    #mkdir -p  "$database_location"/"deeparg"
-    #cd "$database_location"/"deeparg"
-    #if [ ! -d database  ]; then
-#	
-	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-#	
-	#deeparg download_data -o "$database_location"/"deeparg"
-	#
-	#conda deactivate
-#
-#   else echo "-> your DeepARG database is ready"
-#    fi
-#	cd -
+    mkdir -p  "$database_location"/"deeparg"
+    cd "$database_location"/"deeparg"
+    if [ ! -f model/v2/metadata_LS.pkl  ]; then
+	
+	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+	
+	deeparg download_data -o "$database_location"/"deeparg"
+	
+	conda deactivate
+
+   else echo "-> your DeepARG database is ready"
+    fi
+	cd -
 	
 	### Victors
     mkdir -p  "$database_location"/"victors"
@@ -193,19 +192,19 @@ elif [ "$active_module" = "optional" ]; then
 	cd -
 	
 	### DeepARG
-    #mkdir -p  "$database_location"/"deeparg"
-    #cd "$database_location"/"deeparg"
-    #if [ ! -d database  ]; then
-#	
-	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-	#
-	#deeparg download_data -o "$database_location"/"deeparg"
-	#
-	#conda deactivate
-#
-    #else echo "-> your DeepARG database is ready"
-    #fi
-	#cd -
+    mkdir -p  "$database_location"/"deeparg"
+    cd "$database_location"/"deeparg"
+    if [ ! -f model/v2/metadata_LS.pkl  ]; then
+	
+	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+	
+	deeparg download_data -o "$database_location"/"deeparg"
+	
+	conda deactivate
+
+   else echo "-> your DeepARG database is ready"
+    fi
+	cd -
 	
  
 elif [ "$active_module" = "args" ]; then
@@ -213,19 +212,19 @@ elif [ "$active_module" = "args" ]; then
 	############################################### REQUIRED AND ARGs ###############################################
 	
 	### DeepARG
-    #mkdir -p  "$database_location"/"deeparg"
-    #cd "$database_location"/"deeparg"
-    #if [ ! -d database  ]; then
-#	
-	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-	#
-	#deeparg download_data -o "$database_location"/"deeparg"
-	#
-	#conda deactivate
-#
-    #else echo "-> your DeepARG database is ready"
-    #fi
-	#cd -
+    mkdir -p  "$database_location"/"deeparg"
+    cd "$database_location"/"deeparg"
+    if [ ! -f model/v2/metadata_LS.pkl  ]; then
+	
+	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+	
+	deeparg download_data -o "$database_location"/"deeparg"
+	
+	conda deactivate
+
+   else echo "-> your DeepARG database is ready"
+    fi
+	cd -
 	
 	### Victors
     mkdir -p  "$database_location"/"victors"

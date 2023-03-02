@@ -24,7 +24,8 @@ help_message () {
 		echo ""
         echo "  taxonomy	Assign taxonomy to genomes using GTDBtk v2"
         echo "  quality		Estimate genome completeness and contamination using CheckM"
-		echo "  plasmid		Predictes if a sequence within a fasta file is a chromosome, plasmid or undetermined using Plasflow"
+		echo "  args		Predicts the Antimicrobial Resistance Genes (ARGs) in a genome using DeepARG"
+		echo "  plasmid		Predicts if a sequence within a fasta file is a chromosome, plasmid or undetermined using Plasflow"
 		echo "  pathogens	Aligns provided genomes to Virulence Factors databases and format the output"
 		echo "  mspread		Run the main mSpreadComp to compare spread and plasmid-mediated HGT"    
         echo ""
@@ -64,10 +65,9 @@ elif [ "$1" = pathogens ]; then
 elif [ "$1" = mspread ]; then
 	echo mspreadcomp mspread ${@:2}
 	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/mspread.sh ${@:2}
-elif [ "$1" = gene_annotation ]; then
-	echo "The gene_annotation module of mSpreadComp is disabled in this version of mSpreadComp"
-	help_message
-	exit 1
+elif [ "$1" = args ]; then
+	echo mspreadcomp args ${@:2}
+	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/args.sh ${@:2}
 elif [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 	help_message
 elif [ "$1" = "-v" ] || [ "$1" = "--version" ]; then
