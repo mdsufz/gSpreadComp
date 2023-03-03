@@ -114,7 +114,7 @@ done
 conda deactivate
 
 #Format output
-echo "Formatting ARGs annotation results: NOT FINISHED!!!!"
+echo "Formatting ARGs annotation results:"
 
-#Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/deeparg_format.r -i $out -o $out
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/deeparg_format.r -i $out -o $out
 

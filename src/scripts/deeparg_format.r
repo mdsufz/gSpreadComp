@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-#Format plasflow output for mSpreadComp
+#Format DeepARG output for mSpreadComp
 
 #### Load libs and inputs
 
@@ -21,7 +21,7 @@ opt = parse_args(opt_parser)
 out.path <- opt$out
 wd.path <- opt$input
 
-#1)Load Plasflow results systematically
+#1)Load deeparg results systematically
 
 setwd(wd.path)
 
@@ -32,21 +32,18 @@ files <- dir(recursive=TRUE,
 
 #Start dataframe wth one example
 
-plasflow_bind_results <- read.delim(file = files[1])
+deeparg_bind_results <- read.delim(file = files[1])
 bin_name <- sub(".fa.*", "", files[1])
 
-plasflow_bind_results$bin_id <- bin_name
+deeparg_bind_results$bin_id <- bin_name
 
-plasflow_bind_results <- plasflow_bind_results %>%
-  select(bin_id, label ,contig_name, contig_length, id)
-
-no_plasflow_found_bins <- c()
+no_deeparg_found_bins <- c()
 
 total_iterations <- length(files)
 
 for (i in 2:length(files)) {
-
-
+  
+  
   # Compute the percentage of completion
   percent_complete <- (i / total_iterations) * 100
   # Print the percentage of completion
@@ -61,13 +58,10 @@ for (i in 2:length(files)) {
     
     args_found_df$bin_id <- bin_name
     
-    args_found_df <- args_found_df %>%
-      select(bin_id, label, contig_name, contig_length, id)
-    
-    plasflow_bind_results <- rbind.data.frame(plasflow_bind_results,
+    deeparg_bind_results <- rbind.data.frame(deeparg_bind_results,
                                              args_found_df)
   } else {
-    no_plasflow_found_bins <- c(no_plasflow_found_bins, bin_name)
+    no_deeparg_found_bins <- c(no_deeparg_found_bins, bin_name)
     
   }
   
@@ -80,18 +74,21 @@ for (i in 2:length(files)) {
 cat("\n")
 
 #Format
-plasflow_bind_results_format <- plasflow_bind_results %>%
-  separate(label, into = c("sequence_type", "tax")) %>%
+deeparg_bind_results_format <- deeparg_bind_results %>%
   mutate(Genome = gsub("./", "", bin_id)) %>%
-  mutate(Sequence_id = paste0(Genome, "_", contig_name)) %>%
-  select(Genome, sequence_type, Sequence_id)
+  mutate(Gene_sequence_location = paste0(Genome, "_", read_id)) %>%
+  select(Genome, X.ARG, predicted_ARG.class, Gene_sequence_location, probability, identity, alignment.evalue) %>%
+  rename(Gene_id = X.ARG, Gene_class = predicted_ARG.class)
 
-#2) Reorder plasflow_bind_results_format and save to file
+#2) Reorder deeparg_bind_results_format and save to file
 
-write.csv(plasflow_bind_results_format, file = paste0(out.path, "/plasflow_output_combined.csv"),
+write.csv(deeparg_bind_results_format, file = paste0(out.path, "/deeparg_df_combined_mSpreadformat.csv"),
           row.names = F)
 
-write.csv(no_plasflow_found_bins, file = paste0(out.path, "/genomes_with_no_found_plasflow.csv"),
+write.csv(deeparg_bind_results, file = paste0(out.path, "/deeparg_df_combined_raw.csv"),
+          row.names = F)
+
+write.csv(no_deeparg_found_bins, file = paste0(out.path, "/genomes_with_no_found_deeparg.csv"),
           row.names = F)
 
 
