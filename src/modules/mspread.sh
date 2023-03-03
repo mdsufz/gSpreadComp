@@ -134,15 +134,28 @@ echo "Gene prevelance spread per gOTU finished!"
 
 
 
-### Perform Plasmid - Gene description ####
+### Perform Pathogens analysis - Gene description ####
 
+patho_bac_db <- $mSPREAD_DEPENDENCIES_PATH/patho_ncbi_20230222_taxa.csv
 
+echo "Pathogens analysis started!"
+out=`realpath $out`
+pathogens_path=$out/pathogens_results
+mkdir $pathogens_path
 
-### Perform Pathogens - Gene description ####
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens_analysis.r --mags_data $initial_processing_path/genome_data_merged.csv \
+ --selected_lib $initial_processing_path/selected_samples.csv \
+ --gene $gene \
+ --norm_gene_prev $initial_processing_path/gene_prevalence_per_library.csv \
+ --spread_taxa $spread_taxa \
+ --target_gene_col $target_gene_col \
+ --patho_db $patho_bac_db \
+ --vf $vf \
+ --out $pathogens_path
 
+echo "Pathogens analysis finished!"
 
-
-### Perform HGT Network Analysis ####
+### Perform HGT Network Analysis ####### Perform Plasmid - Gene description ####
 
 
 

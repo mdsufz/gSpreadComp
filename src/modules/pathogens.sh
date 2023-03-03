@@ -20,10 +20,10 @@ help_message () {
 ########################################################################################################
 
 # Set defaults
-out="false"; genome_dir="false"; extension=fa; evalue=1e-50
+out="false"; genome_dir="false"; extension=fa; evalue=1e-50; t=1
 
 # load in params
-OPTS=`getopt -o ht:o: --long help,genome_dir:,extension:,threshold: -- "$@"`
+OPTS=`getopt -o ht:o: --long help,genome_dir:,extension:,evalue: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
