@@ -10,6 +10,7 @@ help_message () {
 	echo "	--gtdbtk	STR		Path to the formatted Taxonomy assignment dataframe"
 	echo "	--meta		STR		Path to the formatted Sample's Metadata dataframe"
 	echo "	--vf		STR		Path to the formatted Virulence Factors assignment dataframe"
+	echo "	--plasmid	STR		Path to the formatted Plasmid prediction dataframe"
 	echo "	--nmag		INT		Minimum number of Genomes per Library accepted [default=0]"
 	echo "	--spread_taxa	STR		Taxonomic level to check gene spread [default=Phylum]"
 	echo "	--target_gene_col	STR		Name of the column from the gene dataset with the Gene_ids to analyse [default=Gene_id]"
@@ -25,10 +26,10 @@ help_message () {
 ########################################################################################################
 
 # Set defaults
-out="false"; checkm="false"; gene="false"; gtdbtk="false"; meta="false"; vf="false";nmag=0;spread_taxa="Phylum";target_gene_col="Gene_id"
+out="false"; checkm="false"; gene="false"; gtdbtk="false"; meta="false"; vf="false"; plasmid="false"; nmag=0; t=1 ;spread_taxa="Phylum";target_gene_col="Gene_id"
 
 # load in params
-OPTS=`getopt -o ht:o: --long help,checkm:,gene:,gtdbtk:,meta:,vf:,nmag:,spread_taxa:,target_gene_col: -- "$@"`
+OPTS=`getopt -o ht:o: --long help,checkm:,gene:,gtdbtk:,meta:,vf:,nmag:,spread_taxa:,target_gene_col:,plasmid: -- "$@"`
 # make sure the params are entered correctly
 if [ $? -ne 0 ]; then help_message; exit 1; fi
 
@@ -40,6 +41,7 @@ while true; do
 				--gtdbtk) gtdbtk=$2; shift 2;;
 				--meta) meta=$2; shift 2;;
 				--vf) vf=$2; shift 2;;
+				--plasmid) plasmid=$2; shift 2;;
 				--nmag) nmag=$2; shift 2;;
 				--spread_taxa) spread_taxa=$2; shift 2;;
 				--target_gene_col) target_gene_col=$2; shift 2;;
@@ -134,16 +136,22 @@ echo "Gene prevelance spread per gOTU finished!"
 
 
 
-### Perform Pathogens analysis - Gene description ####
+### Perform Pathogens - Target Gene analysis ####
 
 patho_bac_db <- $mSPREAD_DEPENDENCIES_PATH/patho_ncbi_20230222_taxa.csv
 
-echo "Pathogens analysis started!"
+echo "Plasmid-HGT and Risk analysis started!"
 out=`realpath $out`
 pathogens_path=$out/pathogens_results
-mkdir $pathogens_path
+hgt_path=$out/hgt_events_results
+vis_files=$out/network_vis_files
 
-Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens_analysis.r --mags_data $initial_processing_path/genome_data_merged.csv \
+mkdir $pathogens_path
+mkdir $hgt_path
+mkdir $vis_files
+mkdir $pathogens_path/pairwise_VF_per_tax_boxplots
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/risk_analysis.r --mags_data $initial_processing_path/genome_data_merged.csv \
  --selected_lib $initial_processing_path/selected_samples.csv \
  --gene $gene \
  --norm_gene_prev $initial_processing_path/gene_prevalence_per_library.csv \
@@ -151,12 +159,7 @@ Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens_analysis.r --mags_data $in
  --target_gene_col $target_gene_col \
  --patho_db $patho_bac_db \
  --vf $vf \
- --out $pathogens_path
+ --plasmid $plasmid
+ --out $out
 
-echo "Pathogens analysis finished!"
-
-### Perform HGT Network Analysis ####### Perform Plasmid - Gene description ####
-
-
-
-
+echo "Plasmid-HGT and Risk analysis finished!"
