@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 #Test path
-setwd("/mnt/Chapter3_Diet/mspreadcom_r_dev/")
+#setwd("/mnt/Chapter3_Diet/mspreadcom_r_dev/")
 #setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
 
 #### Load libs and inputs
@@ -9,6 +9,7 @@ setwd("/mnt/Chapter3_Diet/mspreadcom_r_dev/")
 
 library("optparse")
 library("dplyr")
+library("tidyr")
 library("ggplot2")
 library("data.table")
 library("ggpubr")
@@ -136,7 +137,7 @@ path_abs_freq <- mags_data_df %>%
   summarise(count = n()) %>%
   mutate(prop = count / sum(count))
 
-pdf(paste0(out.path, "/pathogens_results", "barplot_patho_target_proportion_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "barplot_patho_target_proportion_plot.pdf"),
     width = 7, height = 5)
 
 path_abs_freq %>%
@@ -191,7 +192,7 @@ mags_data_df %>%
   unique(.)
 
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_patho_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_patho_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>% 
@@ -206,7 +207,7 @@ mags_data_df %>%
 dev.off()
 ### VF : VFs per Taxa per Diet ###
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_Phylum_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_Phylum_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>%
@@ -223,7 +224,7 @@ mags_data_df %>%
 
 dev.off()
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_Phylum_filtered_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_Phylum_filtered_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>%
@@ -242,7 +243,7 @@ mags_data_df %>%
 dev.off()
 
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_Phylum_Patho_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_Phylum_Patho_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>%
@@ -449,7 +450,7 @@ mean_target_gene_per_patho <- all_df %>%
 
 all_df$pathogen_potential <- as.factor(all_df$pathogen_potential)
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_Patho_target_uniqueGene_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_Patho_target_uniqueGene_plot.pdf"),
     width = 7, height = 5)
 
 all_df %>%
@@ -475,7 +476,7 @@ stat.test.gene.patho <- stat.test.gene.patho %>%
   rstatix::add_xy_position(x = "pathogen_potential")
 
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_Patho_uniqueGene_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_Patho_uniqueGene_plot.pdf"),
     width = 7, height = 5)
 
 ggboxplot(all_df %>%
@@ -564,7 +565,7 @@ mags_data_df <- all_df %>%
 
 #Plots for the calculated risk measure
 
-pdf(paste0(out.path, "/pathogens_results", "boxplot_Patho_uniqueGene_per_seqtype_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_Patho_uniqueGene_per_seqtype_plot.pdf"),
     width = 7, height = 5)
 
 all_df %>%
@@ -740,6 +741,8 @@ for (t in target_classes) {
 
 
 #### Find Target Gene involved in plasmid HGT ####
+print("Finding Target Gene involved in plasmid-mediated HGT:")
+
 cycles_found_list <- list()
 all_cycles_found_df <- tibble()
 tax_level = "Family"
@@ -758,7 +761,6 @@ for (t in target_classes) {
   total_plas_df <- cycles_found[[1]]
   
   total_paths <- cycles_found[[2]]
-  print(total_paths)
   
   perc_cycles <- nrow(cycles_found[[1]]) / cycles_found[[2]]
   
@@ -851,23 +853,23 @@ for (t in target_classes) {
   
   ##Save to  csv
   
-  write_csv(nodes.genomes, file = paste0(out.path, "/network_vis_files/", t ,"_nodes_genomes.csv"), row.names = F)
+  write.csv(nodes.genomes, file = paste0(out.path, "/network_vis_files/", t, "/", t, "_nodes_genomes.csv"), row.names = F)
   
-  write_csv(nodes.gene, file = paste0(out.path, "/network_vis_files/",t ,"_nodes_genes.csv"), row.names = F)
+  write.csv(nodes.gene, file = paste0(out.path, "/network_vis_files/", t, "/", t, "_nodes_genes.csv"), row.names = F)
   
-  write_csv(nodes.vfs, file = paste0(out.path,"/network_vis_files/",t,"_nodes_vfs.csv"), row.names = F)
+  write.csv(nodes.vfs, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_nodes_vfs.csv"), row.names = F)
   
-  write_csv(nodes.gene.genomes, file = paste0(out.path,"/network_vis_files/",t,"_nodes_gene_genome.csv"), row.names = F)
+  write.csv(nodes.gene.genomes, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_nodes_gene_genome.csv"), row.names = F)
   
-  write_csv(edge.total, file = paste0(out.path,"/network_vis_files/",t ,"_edge_all.csv"), row.names = F)
+  write.csv(edge.total, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_edge_all.csv"), row.names = F)
   
-  write_csv(edge.total.fil, file = paste0(out.path,"/network_vis_files/",t ,"_edge_all_fil.csv"), row.names = F)
+  write.csv(edge.total.fil, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_edge_all_fil.csv"), row.names = F)
   
-  write_csv(edge.genome.vfs, file = paste0(out.path,"/network_vis_files/",t ,"_edge_genome_vfs.csv"), row.names = F)
+  write.csv(edge.genome.vfs, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_edge_genome_vfs.csv"), row.names = F)
   
-  write_csv(edge.genome.gene, file = paste0(out.path,"/network_vis_files/",t ,"_edge_genome_gene.csv"), row.names = F)
+  write.csv(edge.genome.gene, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_edge_genome_gene.csv"), row.names = F)
   
-  write_csv(edge.gene.vf, file = paste0(out.path,"/network_vis_files/",t ,"_edge_gene_vf.csv"), row.names = F)
+  write.csv(edge.gene.vf, file = paste0(out.path,"/network_vis_files/", t, "/", t, "_edge_gene_vf.csv"), row.names = F)
   
 }
 
@@ -888,11 +890,11 @@ write.csv(x = select.tax,
           file = paste0(out.path, "/common_tax_target.csv"), row.names = F)
 
 ## stat.test.select 
-write.csv(x = stat.test.select,
+write.csv(x = as.data.frame(stat.test.select) %>% select(-groups),
           file = paste0(out.path, "/pathogens_results/", "/stat_diff_tax_vf_target.csv"), row.names = F)
 
 ## stat.test.gene.patho
-write.csv(x = stat.test.gene.patho,
+write.csv(x = as.data.frame(stat.test.gene.patho) %>% select(-groups),
           file = paste0(out.path, "/pathogens_results/", "/stat_diff_patho_potential.csv"), row.names = F)
 
 ## all_cycles_found_df_vf

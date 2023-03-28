@@ -138,7 +138,7 @@ echo "Gene prevelance spread per gOTU finished!"
 
 ### Perform Pathogens - Target Gene analysis ####
 
-patho_bac_db <- $mSPREAD_DEPENDENCIES_PATH/patho_ncbi_20230222_taxa.csv
+patho_bac_db=$mSPREAD_DEPENDENCIES_PATH/patho_ncbi_20230222_taxa.csv
 
 echo "Plasmid-HGT and Risk analysis started!"
 out=`realpath $out`
@@ -159,7 +159,7 @@ Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/risk_analysis.r --mags_data $initial
  --target_gene_col $target_gene_col \
  --patho_db $patho_bac_db \
  --vf $vf \
- --plasmid $plasmid
+ --plasmid $plasmid \
  --out $out
 
 echo "Plasmid-HGT and Risk analysis finished!"

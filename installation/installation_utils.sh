@@ -25,6 +25,7 @@ start_pre_configuration() {
 
     conda create -y -n mSpreadComp_env r-essentials r-base gzip
     conda activate mSpreadComp_env
+    conda install -c conda-forge glpk
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda/envs
