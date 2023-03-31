@@ -1,0 +1,6 @@
+".y.","group1","group2","n1","n2","statistic","df","p","p.adj","p.adj.signif","y.position","xmin","xmax"
+"unique_gene_target","High","Medium",19,61,11.5068534907283,29.1093388595297,2.37e-12,1.42e-11,"****",56.08,1,2
+"unique_gene_target","High","Low",19,41,13.2715752216597,20.7656208467472,1.31e-11,7.86e-11,"****",60.976,1,3
+"unique_gene_target","High","unclassified",19,3375,14.6871635563724,18.0355237030813,1.78e-11,1.07e-10,"****",65.872,1,4
+"unique_gene_target","Medium","unclassified",61,3375,3.05166109814225,60.4125919933616,0.003,0.02,"*",75.664,2,4
+"unique_gene_target","Low","unclassified",41,3375,3.3682118362633,41.0524598922544,0.002,0.01,"**",80.56,3,4
