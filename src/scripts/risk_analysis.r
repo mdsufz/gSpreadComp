@@ -730,9 +730,10 @@ for (t in target_classes) {
   cycles_found_list_vf[[t]][["percentage_of_plasmids_carring_gene"]] <- perc_cycles
   cycles_found_list_vf[[t]][["plasmid_HGT_df"]] <- total_plas_df
   
-  total_plas_df$Target <- t
   
   if(nrow(total_plas_df) > 0){
+
+    total_plas_df$Target <- t
     
     all_cycles_found_df_vf <- rbind.data.frame(all_cycles_found_df_vf, total_plas_df)
     
