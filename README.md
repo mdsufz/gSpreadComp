@@ -1,6 +1,21 @@
-# mSpreadComp
-a novel automatic approach to compare the spread and plasmid-mediated horizontal transmission of annotated genetic potential to pathogens in microbial communities
 
+## gSpreadComp: Prokaryotic Quantitative Risk Assessment Pipeline
+
+### Description
+`gSpreadComp` is a UNIX-based, modular bioinformatics tool designed for prokaryotic quantitative risk assessment, gene spread analysis, and evaluation of plasmid-mediated horizontal transmission to pathogens within microbial communities. It was designed to use sequence data to enhance the traditional quantitative microbial risk assessment (QMRA) models by offering more detailed and integrated analyses of microbial communities in the metagenomic era.
+
+### Objectives and Features
+- **Six Integrated Modules**: Offers modules for taxonomy assignment, genome quality estimation, ARG annotation, plasmid/chromosome classification, virulence factor annotation, and in-depth downstream analysis, including target-based gene spread analysis and prokaryotic risk assessment.
+- **Weighted Average Prevalence (WAP)**: Employs WAP for calculating the spread of target genes at different taxonomical levels or target groups, enabling refined analyses and interpretations of microbial communities.
+- **Pathogenic Risk Assessment**: Utilizes the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) for quantifying pathogenic risk, considering target genes, virulence, and plasmid transmissibility potential.
+- **Reference Pathogen Identification**: Compares genomes to the NCBI pathogens database to identify reference pathogens and to determine the pathogenic risk factors.
+- **HTML Reporting**: Culminates in a structured HTML report after the complete downstream analysis, providing users with an overview of the results.
+
+### Modular Approach and Flexibility
+`gSpreadComp`’s modular nature enables researchers to use the tool's main analysis and report generation steps independently or to integrate only specific pieces of `gSpreadComp` into their pipelines, providing flexibility and accommodating the varying software management needs of investigators.
+
+### Comprehensive Workflow
+`gSpreadComp` amalgamates genome annotation, normalization, and sequence comparison in a unified approach, systematically quantifying gene spread and integrating plasmid-mediated gene transfer annotation with the whole microbiome community in a genome-reference independent manner, and furnishing a sophisticated QMRA metric.
 
 # Installation
 
@@ -26,7 +41,7 @@ $ conda install mamba -n base -c conda-forge
 
 ```
 
-**2 - Install mSpreadComp**
+**2 - Install gSpreadComp**
 
 Once you have miniconda and mamba installed and on your PATH, you can proceed to install mSpreadComp.
 The installation script was designed to install and set up all necessary tools and packages.
@@ -110,3 +125,107 @@ $ bash -i installation/database-setup.sh --help
 
 
 ```
+
+## Usage
+
+### Activating the Conda Environment
+Before using `gSpreadComp`, activate the appropriate conda environment using the following command:
+```sh
+conda activate gSpreadComp_env
+```
+
+### Command-Line Usage
+`gSpreadComp` provides several modules, each performing a specific task within the pipeline. The quick command-line usage is as follows:
+```sh
+mspreadcomp --help
+```
+
+### Modules and Their Descriptions
+`gSpreadComp` comprises several modules, each serving a specific purpose in the genome analysis workflow:
+
+#### 1. Taxonomy Assignment
+```sh
+mspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir
+```
+- Assigns taxonomy to genomes using GTDBtk v2.
+- Options:
+  - `--genome_dir STR`: folder with the bins to be classified (in fasta format)
+  - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
+  - `-o STR`: output directory
+  - `-t INT`: number of threads
+
+#### 2. Genome Quality Estimation
+```sh
+mspreadcomp quality [options] --genome_dir genome_folder -o output_dir
+```
+- Estimates genome completeness and contamination using CheckM.
+- Options:
+  - `--genome_dir STR`: folder with the genomes to estimate quality (in fasta format)
+  - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
+  - `-o STR`: output directory
+  - `-t INT`: number of threads [default: 1]
+  - `-h --help`: print this message
+
+#### 3. ARG Prediction
+```sh
+mspreadcomp args [options] --genome_dir genome_folder -o output_dir
+```
+- Predicts the Antimicrobial Resistance Genes (ARGs) in a genome using DeepARG.
+- Options:
+  - `--genome_dir STR`: folder with the genomes to be classified (in fasta format)
+  - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
+  - `--min_prob NUM`: Minimum probability cutoff for DeepARG [Default: 0.8]
+  - `--arg_alignment_identity NUM`: Identity cutoff for sequence alignment for DeepARG [Default: 35]
+  - `--arg_alignment_evalue NUM`: Evalue cutoff for DeepARG [Default: 1e-10]
+  - `--arg_alignment_overlap NUM`: Alignment read overlap for DeepARG [Default: 0.8]
+  - `--arg_num_alignments_per_entry NUM`: Diamond, minimum number of alignments per entry [Default: 1000]
+  - `-o STR`: output directory
+  - `-h --help`: print this message
+
+#### 4. Plasmid Prediction
+```sh
+mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
+```
+- Predicts if a sequence within a fasta file is a chromosome, plasmid, or undetermined using Plasflow.
+- Options:
+  - `--genome_dir STR`: folder with the genomes to be classified (in fasta format)
+  - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
+  - `--threshold NUM`: threshold for probability filtering [default: 0.7]
+  - `-o STR`: output directory
+  - `-h --help`: print this message
+
+#### 5. Pathogen Alignment
+```sh
+mspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
+```
+- Aligns provided genomes to Virulence Factors databases and formats the output.
+- Options:
+  - `--genome_dir STR`: folder with the genomes to be aligned against Virulence factors (in fasta format)
+  - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
+  - `--evalue NUM`: evalue, expect value, threshold as defined by NCBI-BLAST [default: 1e-50]
+  - `-t INT`: number of threads
+  - `-o STR`: output directory
+  - `-h --help`: print this message
+
+#### 6. Main Analysis
+```sh
+mspreadcomp mspread [options] -o output_dir
+```
+- Runs the main `mSpreadComp` to compare spread and plasmid-mediated HGT.
+- Options:
+  - `--checkm STR`: Path to the formatted Quality estimation dataframe
+  - `--gene STR`: Path to the formatted target Gene dataframe to calculate the spread
+  - `--gtdbtk STR`: Path to the formatted Taxonomy assignment dataframe
+  - `--meta STR`: Path to the formatted Sample's Metadata dataframe
+  - `--vf STR`: Path to the formatted Virulence Factors assignment dataframe
+  - `--plasmid STR`: Path to the formatted Plasmid prediction dataframe
+  - `--nmag INT`: Minimum number of Genomes per Library accepted [default=0]
+  - `--spread_taxa STR`: Taxonomic level to check gene spread [default=Phylum]
+  - `--target_gene_col STR`: Name of the column from the gene dataset with the Gene_ids to analyse [default=Gene_id]
+  - `-t INT`: number of threads
+  - `-o STR`: output directory
+  - `-h --help`: print this message
+
+
+
+
