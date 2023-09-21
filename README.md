@@ -1,4 +1,3 @@
-
 ## gSpreadComp: Prokaryotic Quantitative Risk Assessment Pipeline
 
 ### Description
@@ -15,63 +14,77 @@
 `gSpreadComp`’s modular nature enables researchers to use the tool's main analysis and report generation steps independently or to integrate only specific pieces of `gSpreadComp` into their pipelines, providing flexibility and accommodating the varying software management needs of investigators.
 
 ### Comprehensive Workflow
-`gSpreadComp` amalgamates genome annotation, normalization, and sequence comparison in a unified approach, systematically quantifying gene spread and integrating plasmid-mediated gene transfer annotation with the whole microbiome community in a genome-reference independent manner, and furnishing a sophisticated QMRA metric.
+`gSpreadComp` amalgamates genome annotation, normalization, and sequence comparison in a unified approach, systematically quantifying gene spread and integrating plasmid-mediated gene transfer annotation with the whole microbiome community in a genome-reference independent manner and furnishing a sophisticated QMRA metric.
+
+# Requirements
+
+Before installing and running `gSpreadComp`, ensure that your system meets the following requirements:
+
+## 1. Operating System
+- Linux x64 system
+
+## 2. Package Managers
+- [Miniconda](https://docs.conda.io/en/latest/miniconda.html): Required for creating environments and managing packages.
+- [Mamba](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html): A faster package manager used within the `gSpreadComp` installation.
+
+## 3. Storage
+- Approximately 15 GB for software installation.
+- Around 92 GB for the entire database requirements.
 
 # Installation
 
-**1 - Install miniconda**
+## Database Management
+`gSpreadComp` includes an easy-to-use script for automatic download and configuration of the required databases, with scheduled updates every January and July.
 
-To bypass conflicting dependencies, the mSpreadComp approach uses miniconda to create automatically orchestrated environments. In addition, [mamba](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html) is a much faster package manager than conda and is used within the mSpreadComp installation. Consequently, miniconda and mamba are required to be previously installed in your system. Following you have a possible way of installing miniconda and mamba. Please, be aware that mamba works best when installed in your base environment.
+## Modular Nature
+Allows for independent usage of its bioinformatic approaches, facilitating integration into existing pipelines and offering flexibility in analysis.
+
+## Compatibility and Requirements
+Designed to support Linux x64 systems, requiring approximately 15 GB for software installation and around 92 GB for the entire database requirements.
+
+## 1 - Install miniconda
+
+To bypass conflicting dependencies, the gSpreadComp approach uses miniconda to create automatically orchestrated environments. [Mamba](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html) is a much faster package manager than conda and is used within the gSpreadComp installation. Consequently, miniconda and mamba are required to be previously installed in your system. Below is a possible way of installing miniconda and mamba. Please, be aware that mamba works best when installed in your base environment.
 
 ```console
-
-#See documentation: https://docs.conda.io/en/latest/miniconda.html
+# See documentation: https://docs.conda.io/en/latest/miniconda.html
 
 $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-
 $ chmod +x Miniconda3-latest-Linux-x86_64.sh
-
 $ ./Miniconda3-latest-Linux-x86_64.sh
-
 $ export PATH=~/miniconda3/bin:$PATH
 
-#Install mamba. See documentation: https://mamba.readthedocs.io/en/latest/installation.html
-
+# Install mamba. See documentation: https://mamba.readthedocs.io/en/latest/installation.html
 $ conda install mamba -n base -c conda-forge
-
 ```
 
-**2 - Install gSpreadComp**
+## 2 - Install gSpreadComp
 
-Once you have miniconda and mamba installed and on your PATH, you can proceed to install mSpreadComp.
+Once you have miniconda and mamba installed and on your PATH, you can proceed to install gSpreadComp.
 The installation script was designed to install and set up all necessary tools and packages.
 
 ```console
-#clone repository
+# Clone repository
+$ git clone https://github.com/JotaKas/gSpreadComp.git
 
-$ git clone https://github.com/JotaKas/mSpreadComp.git
+# Go to the gSpreadComp cloned repository folder
+$ cd gSpreadComp
 
-#Go to the mSpreadComp cloned repository folder
-$ cd mSpreadComp
-
-#Make sure you have conda ready and that you are in your base environment.
+# Make sure you have conda ready and that you are in your base environment.
 $ conda activate base
 $ echo $CONDA_PREFIX
 
-#You should see something like the following:
+# You should see something like the following:
 /path/to/miniconda3
 
-#Run the installation script as follows
+# Run the installation script as follows
 $ bash -i installation/install.sh
 
-#Follow the instructions on the screen:
+# Follow the instructions on the screen:
 # Enter "y" if you want to install all modules, otherwise enter "n".
-# If you entered "n",enter "y" for each of the modules you would like to install individually.
+# If you entered "n", enter "y" for each of the modules you would like to install individually.
 
 	The MuDoGeR's installation will begin..
-
-
-
 
 
 	      (  )   (   )  )			
@@ -89,35 +102,33 @@ $ bash -i installation/install.sh
 	This might take a while. Time to grab a coffee...
 ```
 
-**3 - Install necessary databases**
+## 3 - Install necessary databases
 
-**Make sure to run the database setup after MuDoGeR is installed.**
+**Make sure to run the database setup after gSpreadComp is installed.**
 
-Some bioinformatics tools used within mSpreadComp require specific databases to work. We developed a database download and set up tool to make our lives easier. 
+Some bioinformatics tools used within gSpreadComp require specific databases to work. We developed a database download and set up tool to make our lives easier. You can choose to install only the databases you intend to use. You can use the flag `--dbs` to choose and set up the selected databases (all [default], install all databases).
 
-You can choose to install only the databases you intend to use. You can use the flag ```--dbs``` to choose and set up the selected databases (all \[default], install all databases).
-
-Use this script if you want mSpreadComp to take care of everything. 
+Use this script if you want gSpreadComp to take care of everything.
 
 ```console
-#Make sure mSpreadComp_env is activated. It should have been created when you ran 'bash -i installation/install.sh'
-$ conda activate mSpreadComp_env
+# Make sure gSpreadComp_env is activated. It should have been created when you ran 'bash -i installation/install.sh'
+$ conda activate gSpreadComp_env
 
-#Go to mSpreadComp cloned directory
-$ cd mSpreadComp
+# Go to gSpreadComp cloned directory
+$ cd gSpreadComp
 
-#Run the database setup script
+# Run the database setup script
 $ bash -i installation/database-setup.sh --dbs all -o /path/to/save/databases
 
-#You can also check out the database-setup help information
+# You can also check out the database-setup help information
 $ bash -i installation/database-setup.sh --help
 
-        mSpreadComp database script v=1.0
+        gSpreadComp database script v=1.0
         Usage: bash -i database-setup.sh --dbs [module] -o output_folder_for_dbs
-		    USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH MSPREADCOMP
+		    USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH gSpreadCOMP
           --dbs all				download and install the required and optional databases [default]"
-          --dbs required              		download and install the required databases (Victors and VFDB) for mSpreadComp
-          --dbs optional              		download and install all the optional (ARGs, GTDB-tk, CheckM) databases for mSpreadComp
+          --dbs required              		download and install the required databases (Victors and VFDB) for gSpreadComp
+          --dbs optional              		download and install all the optional (ARGs, GTDB-tk, CheckM) databases for gSpreadComp
           --dbs args				download and install the required and the ARGs databases.
           -o path/folder/to/save/dbs		output folder where you want to save the downloaded databases
           --help | -h				show this help message
