@@ -73,5 +73,57 @@ After running the Taxonomy Module, you will find the output in the specified out
 
 The `gtdb_df_format_gSpread.csv` file contains taxonomy information for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. This file is crucial for the downstream analysis and should be retained.
 The **gtdbtk_result.tsv**: This file consolidates the results from GTDBtk, providing comprehensive information on taxonomy assignments in the GTDBtk format.
-For a detailed description of the other files, the user can go to the [**GTDB-tk**](https://academic.oup.com/bioinformatics/article/38/23/5315/6758240) page. 
+For a detailed description of the other files, the user can go to the [**GTDB-tk**](https://academic.oup.com/bioinformatics/article/38/23/5315/6758240) page.
+
+### Genome Quality Estimation using CheckM
+
+The quality module in `gSpreadComp` uses CheckM to estimate the quality of genomes. To run this module, use the `mspreadcomp quality` command. Below are the available options for this module:
+
+```console
+mspreadcomp quality --help
+
+Usage: mspreadcomp quality [options] --genome_dir genome_folder -o output_dir
+Options:
+    --genome_dir STR    folder with the genomes to estimate quality (in fasta format)
+    --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
+    -o STR              output directory
+    -t INT              number of threads [default: 1]
+```
+
+### Running the Quality Module
+
+1. Ensure you are in the `test_gspread_run` folder created in the previous step.
+2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
+3. Create an output folder within the test run folder, for example, `04_gspread_checkm_quality`.
+
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `04_gspread_checkm_quality`, your command will look like:
+
+```console
+$ mspreadcomp quality --genome_dir ./01_input_genomes/ --extension fa -o ./04_gspread_checkm_quality/ -t 25
+```
+
+Run this command, and once it's completed, you can proceed to inspect the output in the `04_gspread_checkm_quality` folder.
+
+### Exploring the Output of the Quality Module
+
+After running the Quality Module, you will find the output in the specified output directory, structured as follows:
+
+```
+04_gspread_checkm_quality/
+├── bins
+├── checkm_df_format_gSpread.csv
+├── checkm.log
+├── lineage.ms
+├── outputcheckm.tsv
+└── storage
+```
+
+#### Main Output File: checkm_df_format_gSpread.csv. Understanding the Output
+
+The `checkm_df_format_gSpread.csv` file contains quality information for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. This file is crucial for the downstream analysis and should be retained.
+The **outputcheckm.tsv** is the main output file from CheckM itself, consolidating the results and providing comprehensive information on genome quality.
+
+For a detailed description of the other files, the user can go to the [**CheckM**](https://genome.cshlp.org/content/25/7/1043) page.
+
+
 
