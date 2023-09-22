@@ -88,3 +88,8 @@ checkm lineage_wf -t $threads --reduced_tree --tab_table -x $extension -f "$out"
 fi
 
 conda deactivate
+
+#Format output
+echo "Formatting Taxonomy CheckM results:"
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/checkm_format.r --checkm "$out"/outputcheckm.tsv -o $out
