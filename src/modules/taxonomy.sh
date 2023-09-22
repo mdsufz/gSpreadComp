@@ -78,7 +78,7 @@ echo "Your GTDBtk database is at $GTDBTK_DATA_PATH"
 
 #Run
 if [ -f "$out"/gtdbtk.bac120.summary.tsv ] || [ -f "$out"/gtdbtk.ar53.summary.tsv ];
-then echo "";
+then echo "Skipping. GTDBtk files already found: "$out"/gtdbtk.bac120.summary.tsv";
 else
 gtdbtk classify_wf --extension $extension --cpus "$threads" --genome_dir $genome_dir --out_dir $out
 fi
@@ -92,3 +92,8 @@ echo "Error: GTDBtk summary files not found"
 fi
 
 conda deactivate
+
+#Format output
+echo "Formatting Taxonomy GTDBtk results:"
+
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gtdbtk_format.r --gtdb "$out"/gtdbtk_result.tsv -o $out
