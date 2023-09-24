@@ -60,7 +60,8 @@ CHECKM_DB="$DATABASES_LOCATION"checkm
 
 echo ${CHECKM_DB} | checkm data setRoot ${CHECKM_DB}
 
-
+genome_dir=$(realpath $genome_dir)
+out=$(realpath $out)
 # check if all parameters are entered
 if [ "$out" = "false" ] || [ "$genome_dir" = "false" ]; then 
 	help_message; exit 1
@@ -69,7 +70,7 @@ fi
 if [ -z "$CHECKM_DB" ]; then 
 	echo "No CHECKM database found."
 	echo "Please make sure you installed the CHECKM database and configured its path"
-	echo "You can follow the instructions on the mSpreadComp Github page"
+	echo "You can follow the instructions on the mSpreadComp GitHub page"
 	help_message; exit 1
 fi
 
