@@ -125,5 +125,66 @@ The **outputcheckm.tsv** is the main output file from CheckM itself, consolidati
 
 For a detailed description of the other files, the user can go to the [**CheckM**](https://genome.cshlp.org/content/25/7/1043) page.
 
+### ARGs Annotation using DeepARG
+
+The ARGs module in `gSpreadComp` uses DeepARG to predict the Antimicrobial Resistance Genes (ARGs) in a genome. To run this module, use the `mspreadcomp args` command. Below are the available options for this module:
+
+```console
+mspreadcomp args --help
+
+Usage: mspreadcomp args [options] --genome_dir genome_folder -o output_dir
+Options:
+    --genome_dir STR    folder with the genomes to be classified (in fasta format)
+    --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
+    --min_prob NUM      Minimum probability cutoff for DeepARG [Default: 0.8]
+    --arg_alignment_identity NUM   Identity cutoff for sequence alignment for DeepARG [Default: 35]
+    --arg_alignment_evalue NUM     Evalue cutoff for DeepARG [Default: 1e-10]
+    --arg_alignment_overlap NUM    Alignment read overlap for DeepARG [Default: 0.8]
+    --arg_num_alignments_per_entry NUM   Diamond, minimum number of alignments per entry [Default: 1000]
+    -o STR              output directory
+```
+
+### Running the ARGs Module
+
+1. Ensure you are in the `test_gspread_run` folder created in the previous steps.
+2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
+3. Create an output folder within the test run folder, for example, `05_gspread_deeparg_args`.
+
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `05_gspread_deeparg_args`, your command will look like:
+
+```console
+$ mspreadcomp args --genome_dir ./01_input_genomes/ --extension fa -o ./05_gspread_deeparg_args/
+```
+
+Run this command, and once it's completed, you can proceed to inspect the output in the `05_gspread_deeparg_args` folder.
+
+### Inspecting the Output of the ARGs Module
+
+After running the ARGs Module, you will find the output in the specified output directory, structured as follows:
+
+```
+05_gspread_deeparg_args/
+├── deeparg_df_format_gSpread.csv
+├── deeparg_df_combined_raw.csv
+├── genome_name_1.fa
+│   ├── genome_name_1.fa_deeparg_out.align.daa
+│   ├── genome_name_1.fa_deeparg_out.align.daa.tsv
+│   ├── genome_name_1.fa_deeparg_out.mapping.ARG
+│   └── genome_name_1.fa_deeparg_out.mapping.potential.ARG
+├── genome_name_2.fa
+│   ├── genome_name_2.fa_deeparg_out.align.daa
+│   ├── genome_name_2.fa_deeparg_out.align.daa.tsv
+│   ├── genome_name_2.fa_deeparg_out.mapping.ARG
+│   └── genome_name_2.fa_deeparg_out.mapping.potential.ARG
+└── genomes_with_no_found_deeparg.csv
+```
+
+#### Understanding the Output Files and Directories
+
+1. **deeparg_df_format_gSpread.csv**: This is the format-ready main output file, containing formatted ARGs annotation information per genome. It's ready for integration into subsequent `gSpreadComp` modules.
+2. **deeparg_df_combined_raw.csv**: This file combines the raw output from DeepARG for all genomes analyzed.
+3. **genome_name.fa Directories**: For each genome analyzed, a separate directory is created, named after the genome. To get a detailed description of its content, the user can read the [DeepARG](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-018-0401-z) documentation
+4. **genomes_with_no_found_deeparg.csv**: This file lists the genomes for which no ARGs were found by DeepARG.
+
 
 
