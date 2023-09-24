@@ -69,11 +69,13 @@ fi
 #Run PlasFlow
 
 genomes_path=`realpath $genome_dir`
+out=$(realpath $out)
 
 for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
 	PlasFlow.py --input $g --output $out/$genome/"$genome"_plasflow_out.tsv --threshold $threshold;
+ 	rm -f "$g"_*.npy
 done
 
 conda deactivate
