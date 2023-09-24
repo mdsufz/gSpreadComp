@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-#Format plasflow output for mSpreadComp
+#Format plasflow output for gSpreadComp
 
 #### Load libs and inputs
 
@@ -30,7 +30,7 @@ files <- dir(recursive=TRUE,
              pattern="\\_plasflow_out.tsv$")
 
 
-#Start dataframe wth one example
+#Start dataframe with one example
 
 plasflow_bind_results <- read.delim(file = files[1])
 bin_name <- sub(".fa.*", "", files[1])
@@ -88,7 +88,7 @@ plasflow_bind_results_format <- plasflow_bind_results %>%
 
 #2) Reorder plasflow_bind_results_format and save to file
 
-write.csv(plasflow_bind_results_format, file = paste0(out.path, "/plasflow_output_combined.csv"),
+write.csv(plasflow_bind_results_format, file = paste0(out.path, "/plasflow_combined_format_gSpread.csv"),
           row.names = F)
 
 write.csv(no_plasflow_found_bins, file = paste0(out.path, "/genomes_with_no_found_plasflow.csv"),
