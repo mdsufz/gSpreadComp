@@ -12,7 +12,7 @@ option_list = list(
   make_option(c("-i", "--input"), type="character", default=NULL, 
               help="Path to the created DeepARG results directories", metavar="character"),
   make_option(c("-o", "--out"), type="character",
-              help="output directory path to save formated tables", metavar="character")
+              help="output directory path to save formatted tables", metavar="character")
 ); 
 
 opt_parser = OptionParser(option_list=option_list)
@@ -30,7 +30,7 @@ files <- dir(recursive=TRUE,
              pattern="\\.mapping.ARG$")
 
 
-#Start dataframe wth one example
+#Start dataframe with one example
 
 deeparg_bind_results <- read.delim(file = files[1])
 bin_name <- sub(".fa.*", "", files[1])
@@ -82,7 +82,7 @@ deeparg_bind_results_format <- deeparg_bind_results %>%
 
 #2) Reorder deeparg_bind_results_format and save to file
 
-write.csv(deeparg_bind_results_format, file = paste0(out.path, "/deeparg_df_combined_mSpreadformat.csv"),
+write.csv(deeparg_bind_results_format, file = paste0(out.path, "/deeparg_df_format_gSpread.csv"),
           row.names = F)
 
 write.csv(deeparg_bind_results, file = paste0(out.path, "/deeparg_df_combined_raw.csv"),
