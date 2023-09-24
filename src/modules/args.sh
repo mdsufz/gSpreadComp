@@ -66,7 +66,6 @@ source $database
 conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/deeparg_env
 
 
-
 # Load databases paths
 DEEPARG_DB_PATH="$DATABASES_LOCATION"deeparg/database/v2/features.fasta
 
@@ -94,7 +93,7 @@ echo "Your DeepARG database is at $DEEPARG_DB_PATH"
 DEEPARG_DB_PATH="$DATABASES_LOCATION"deeparg/
 
 genomes_path=`realpath $genome_dir`
-
+out=$(realpath $out)
 for g in $genomes_path/*.$extension; do
 	genome=${g##*/}
 	mkdir $out/$genome;
