@@ -57,6 +57,9 @@ GTDBTK_DATA_PATH=$(realpath "$DATABASES_LOCATION"gtdbtk/release*)
 
 export GTDBTK_DATA_PATH=$GTDBTK_DATA_PATH
 
+genome_dir=$(realpath $genome_dir)
+out=$(realpath $out)
+
 # check if all parameters are entered
 if [ "$out" = "false" ] || [ "$genome_dir" = "false" ]; then 
 	help_message; exit 1
@@ -65,7 +68,7 @@ fi
 if [ -z "$GTDBTK_DATA_PATH" ]; then 
 	echo "No GTDBtk database found."
 	echo "Please make sure you installed the GTDBtk database and configured its path"
-	echo "You can follow the instructions on the mSpreadComp Github page"
+	echo "You can follow the instructions on the mSpreadComp GitHub page"
 	help_message; exit 1
 fi
 
