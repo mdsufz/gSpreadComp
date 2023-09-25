@@ -190,7 +190,7 @@ After running the ARGs Module, you will find the output in the specified output 
 
 The Plasmid module in `gSpreadComp` uses PlasFlow to predict if a sequence within a fasta file is a chromosome, plasmid, or undetermined. To run this module, use the `mspreadcomp plasmid` command. Below are the available options for this module:
 
-\```console
+```console
 mspreadcomp plasmid --help
 
 Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
@@ -199,7 +199,7 @@ Options:
     --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
     --threshold NUM     threshold for probability filtering [default: 0.7]
     -o STR              output directory
-\```
+```
 
 ### Running the Plasmid Identification Module
 
@@ -209,9 +209,9 @@ Options:
 
 Assuming you have placed your genomes in `01_input_genomes` and your output folder is `06_gspread_plasmids`, your command will look like this:
 
-\```console
+```console
 $ mspreadcomp plasmid --genome_dir ./01_input_genomes/ --extension fa -o ./06_gspread_plasmids/
-\```
+```
 
 Run this command, and once it's completed, you can proceed to inspect the output in the `06_gspread_plasmids` folder. Below is the expected output structure and explanation of each output file.
 
@@ -219,7 +219,7 @@ Run this command, and once it's completed, you can proceed to inspect the output
 
 After running the Plasmid Module, you will find the output in the specified output directory, structured as follows:
 
-\```
+```
 06_gspread_plasmids/
 ├── genome_name_1.fa
 │   ├── genome_name_1.fa_plasflow_out.tsv
@@ -233,7 +233,7 @@ After running the Plasmid Module, you will find the output in the specified outp
 │   └── genome_name_2.fa_plasflow_out.tsv_unclassified.fasta
 ├── genomes_with_no_found_plasflow.csv
 └── plasflow_combined_format_gSpread.csv
-\```
+```
 
 #### Understanding the Output Files and Directories
 
@@ -245,8 +245,70 @@ After running the Plasmid Module, you will find the output in the specified outp
    For a detailed description of the files, the user can read the [Plasflow](https://academic.oup.com/nar/article/46/6/e35/4807335?login=true) documentation
 2. **genomes_with_no_found_plasflow.csv**: This file lists the genomes for which no sequences were found by PlasFlow. Hopefully, it will be empty.
 
-3. **plasflow_combined_format_gSpread.csv**: This is the format-ready main output file, containing formatted PlasFlow results per genome. It's ready for integration into subsequent `gSpreadComp` modules.
+3. **plasflow_combined_format_gSpread.csv**: This is the format-ready main output file containing formatted PlasFlow results per genome. It's ready for integration into subsequent `gSpreadComp` modules.
 
+### Pathogens Annotation using Virulence Factors Databases
 
+The Pathogens module in `gSpreadComp` aligns the provided genomes against selected Virulence Factors databases and formats the output. To run this module, use the `mspreadcomp pathogens` command. Below are the available options for this module:
+
+```console
+mspreadcomp pathogens --help
+
+Usage: mspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
+Options:
+    --genome_dir STR    folder with the genomes to be aligned against Virulence factors (in fasta format)
+    --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
+    --evalue NUM        evalue, expect value, threshold as defined by NCBI-BLAST [default: 1e-50]
+    --vf STR            select the virulence factors database to be used (e.g. victors, vfdb or both) [default: both]
+    -t INT              number of threads
+    -o STR              output directory
+```
+
+### Running the Pathogens Module
+
+1. Ensure you are in the `test_gspread_run` folder created in the previous steps.
+2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
+3. Create an output folder within the test run folder, for example, `07_gspread_pathogens`.
+
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `07_gspread_pathogens`, your command will look like:
+
+```console
+$ mspreadcomp pathogens --genome_dir ./01_input_genomes/ --extension fa -o ./07_gspread_pathogens/ --vf both -t 25
+```
+
+Run this command, and once it's completed, you can proceed to inspect the output in the `07_gspread_pathogens` folder.
+
+### Inspecting the Output of the Pathogens Module
+
+After running the Pathogens Module, you will find the output in the specified output directory. Below is the expected output structure and explanation of each output file.
+
+```console
+07_gspread_pathogens/
+├── genome_name_1.fa
+│   ├── vfdb_genome_name_1.out
+│   └── victors_genome_name_1.out
+├── genome_name_2.fa
+│   ├── vfdb_genome_name_2.out
+│   └── victors_genome_name_2.out
+├── vfdb_format_gSpread.csv.csv
+├── vfdb_headers.txt
+├── vfdb_merged.out
+├── vfdb_per_genome_unique_count.csv
+├── victors_format_gSpread.csv.csv
+├── victors_db_headers.txt
+├── victors_merged.out
+└── victors_per_genome_unique_count.csv
+```
+
+#### Understanding the Output Files and Directories
+
+1. **vfdb_format_gSpread.csv.csv & victors_format_gSpread.csv.csv**: These are the format-ready main output files, containing formatted virulence factors results per genome. They're ready for integration into subsequent `gSpreadComp` modules.
+2. **vfdb_headers.txt & victors_db_headers.txt**: These files contain the headers for the VFDB and Victors databases respectively.
+3. **vfdb_merged.out & victors_merged.out**: These files contain the merged results of the alignments against the VFDB and Victors databases respectively.
+4. **vfdb_per_genome_unique_count.csv & victors_per_genome_unique_count.csv**: These files contain the count of unique virulence factors per genome for the VFDB and Victors databases respectively.
+
+#### Main Output Files: vfdb_format_gSpread.csv.csv & victors_format_gSpread.csv.csv
+
+The `vfdb_format_gSpread.csv.csv` and `victors_format_gSpread.csv.csv` files contain virulence factors results for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. These files are crucial for downstream analysis and should be retained.
 
 
