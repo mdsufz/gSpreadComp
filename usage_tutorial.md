@@ -186,5 +186,67 @@ After running the ARGs Module, you will find the output in the specified output 
 3. **genome_name.fa Directories**: For each genome analyzed, a separate directory is created, named after the genome. To get a detailed description of its content, the user can read the [DeepARG](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-018-0401-z) documentation
 4. **genomes_with_no_found_deeparg.csv**: This file lists the genomes for which no ARGs were found by DeepARG.
 
+### Plasmid Identification using PlasFlow
+
+The Plasmid module in `gSpreadComp` uses PlasFlow to predict if a sequence within a fasta file is a chromosome, plasmid, or undetermined. To run this module, use the `mspreadcomp plasmid` command. Below are the available options for this module:
+
+\```console
+mspreadcomp plasmid --help
+
+Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
+Options:
+    --genome_dir STR    folder with the genomes to be classified (in fasta format)
+    --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
+    --threshold NUM     threshold for probability filtering [default: 0.7]
+    -o STR              output directory
+\```
+
+### Running the Plasmid Identification Module
+
+1. Ensure you are in the `test_gspread_run` folder created in the previous steps.
+2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
+3. Create an output folder within the test run folder, for example, `06_gspread_plasmids`.
+
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `06_gspread_plasmids`, your command will look like this:
+
+\```console
+$ mspreadcomp plasmid --genome_dir ./01_input_genomes/ --extension fa -o ./06_gspread_plasmids/
+\```
+
+Run this command, and once it's completed, you can proceed to inspect the output in the `06_gspread_plasmids` folder. Below is the expected output structure and explanation of each output file.
+
+### Inspecting the Output of the Plasmid Module
+
+After running the Plasmid Module, you will find the output in the specified output directory, structured as follows:
+
+\```
+06_gspread_plasmids/
+├── genome_name_1.fa
+│   ├── genome_name_1.fa_plasflow_out.tsv
+│   ├── genome_name_1.fa_plasflow_out.tsv_chromosomes.fasta
+│   ├── genome_name_1.fa_plasflow_out.tsv_plasmids.fasta
+│   └── genome_name_1.fa_plasflow_out.tsv_unclassified.fasta
+├── genome_name_2.fa
+│   ├── genome_name_2.fa_plasflow_out.tsv
+│   ├── genome_name_2.fa_plasflow_out.tsv_chromosomes.fasta
+│   ├── genome_name_2.fa_plasflow_out.tsv_plasmids.fasta
+│   └── genome_name_2.fa_plasflow_out.tsv_unclassified.fasta
+├── genomes_with_no_found_plasflow.csv
+└── plasflow_combined_format_gSpread.csv
+\```
+
+#### Understanding the Output Files and Directories
+
+1. **genome_name.fa Directories**: For each genome analyzed, a separate directory is created, named after the genome. It contains the following files:
+   - **genome_name.fa_plasflow_out.tsv**: This file contains the PlasFlow results in tab-separated values format.
+   - **genome_name.fa_plasflow_out.tsv_chromosomes.fasta**: This file contains sequences predicted to be chromosomes.
+   - **genome_name.fa_plasflow_out.tsv_plasmids.fasta**: This file contains sequences predicted to be plasmids.
+   - **genome_name.fa_plasflow_out.tsv_unclassified.fasta**: This file contains sequences that could not be classified as either plasmids or chromosomes.
+   For a detailed description of the files, the user can read the [Plasflow](https://academic.oup.com/nar/article/46/6/e35/4807335?login=true) documentation
+2. **genomes_with_no_found_plasflow.csv**: This file lists the genomes for which no sequences were found by PlasFlow. Hopefully, it will be empty.
+
+3. **plasflow_combined_format_gSpread.csv**: This is the format-ready main output file, containing formatted PlasFlow results per genome. It's ready for integration into subsequent `gSpreadComp` modules.
+
+
 
 
