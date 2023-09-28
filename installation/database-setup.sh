@@ -4,13 +4,13 @@ VERSION=1.0
 
 help_message () {
         echo""
-        echo "mSpreadComp database script v=$VERSION"
+        echo "gspreadcomp database script v=$VERSION"
         echo "Usage: bash -i database-setup.sh --dbs [module] -o output_folder_for_dbs"
-		echo "USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH MSPREADCOMP"
+		echo "USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH gspreadcomp"
         echo ""
         echo "  --dbs all			download and install the required and optional databases [default]"
-        echo "  --dbs required              	download and install the required databases (Victors and VFDB) for mSpreadComp"
-        echo "  --dbs optional              	download and install all the optional (ARGs, GTDB-tk, CheckM) databases for mSpreadComp"
+        echo "  --dbs required              	download and install the required databases (Victors and VFDB) for gspreadcomp"
+        echo "  --dbs optional              	download and install all the optional (ARGs, GTDB-tk, CheckM) databases for gspreadcomp"
         echo "  --dbs args			download and install the required and the ARGs databases."
         echo "  -o path/folder/to/save/dbs	output folder where you want to save the downloaded databases"
         echo "  --help | -h			show this help message"
@@ -33,7 +33,7 @@ done
 
 
 mkdir -p "$database_location"
-conda activate mSpreadComp_env
+conda activate gspreadcomp_env
 config_file="$(which config)"
 source "$config_file"
 
