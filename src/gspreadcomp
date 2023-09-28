@@ -2,7 +2,7 @@
 
 VERSION=0.1
 
-mSpread_lettering(){
+gspread_lettering(){
 echo -e "        ____                           _  ____                      "
 echo -e "   __ _/ ___| _ __  _ __ ___  __ _  __| |/ ___|___  _ __ ___  _ __  "
 echo -e "  / _\` \\___ \\| '_ \\| '__/ _ \\/ _\` |/ _\` | |   / _ \\| '_ \` _ \\| '_ \\ "
@@ -16,8 +16,8 @@ echo -e "\t\t\t\tVersion $VERSION\n\n"
 
 help_message () {
         echo""
-        echo "mSpreadComp v=$VERSION"
-        echo "Usage: mspreadcomp [module] [module_options]"
+        echo "gspreadcomp v=$VERSION"
+        echo "Usage: gspreadcomp [module] [module_options]"
         echo ""
 		echo "  Modules:"
 		echo ""
@@ -26,14 +26,14 @@ help_message () {
 		echo "  args	Predicts the Antimicrobial Resistance Genes (ARGs) in a genome using DeepARG"
 		echo "  plasmid	Predicts if a sequence within a fasta file is a chromosome, plasmid or undetermined using Plasflow"
 		echo "  pathogens	Aligns provided genomes to Virulence Factors databases and format the output"
-		echo "  mspread	Run the main mSpreadComp to compare spread and plasmid-mediated HGT"    
+		echo "  gspread	Run the main gspreadcomp to compare spread, plasmid-mediated HGT, and calculate pathogenic risk"    
         echo ""
         echo "  --help | -h	show this help message"
-        echo "  --version | -v	show mSpreadComp version"
-        echo "  --show-config	show where the mSpreadComp configuration files are stored"
+        echo "  --version | -v	show gspreadcomp version"
+        echo "  --show-config	show where the gspreadcomp configuration files are stored"
         echo "";}
   
-mSpread_lettering
+gspread_lettering
 
 config_path="$(which config)"
 source $config_path
@@ -47,38 +47,38 @@ fi
 ########################     LOADING IN THE PARAMETERS AND RUNNING MODULE       ########################
 ########################################################################################################
 
-# config file should be in the bin folder from the mSpreadComp_env conda environment
+# config file should be in the bin folder from the gspreadcomp_env conda environment
 
 if [ "$1" = taxonomy ]; then
-	echo mspreadcomp taxonomy ${@:2}
+	echo gspreadcomp taxonomy ${@:2}
 	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/taxonomy.sh ${@:2}
 elif [ "$1" = quality ]; then
-	echo mspreadcomp quality ${@:2}
+	echo gspreadcomp quality ${@:2}
 	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/quality.sh ${@:2}
 elif [ "$1" = plasmid ]; then
-	echo mspreadcomp plasmid ${@:2}
+	echo gspreadcomp plasmid ${@:2}
 	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/plasmid.sh ${@:2}
 elif [ "$1" = pathogens ]; then
-	echo mspreadcomp pathogens ${@:2}
+	echo gspreadcomp pathogens ${@:2}
 	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/pathogens.sh ${@:2}
-elif [ "$1" = mspread ]; then
-	echo mspreadcomp mspread ${@:2}
-	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/mspread.sh ${@:2}
+elif [ "$1" = gspread ]; then
+	echo gspreadcomp gspread ${@:2}
+	time $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gspread.sh ${@:2}
 elif [ "$1" = args ]; then
-	echo mspreadcomp args ${@:2}
+	echo gspreadcomp args ${@:2}
 	bash -i $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/args.sh ${@:2}
 elif [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 	help_message
 elif [ "$1" = "-v" ] || [ "$1" = "--version" ]; then
 	echo ""
-	echo "mSpreadComp v=$VERSION"
+	echo gSpreadcomp v=$VERSION"
 	echo ""
 elif [ "$1" = "--show-config" ]; then
-	echo "mSpreadComp script found in $(which mspreadcomp) and config file was found in $(which config)."
+	echo "gspreadcomp script found in $(which gspreadcomp) and config file was found in $(which config)."
 	echo -e "\nHere are the contents of config:\n"
 	cat $(which config)
 else
-        comm "Please select a proper module of mSpreadComp."
+        comm "Please select a proper module of gspreadcomp."
         help_message
         exit 1
 fi
