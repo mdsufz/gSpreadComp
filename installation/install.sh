@@ -3,7 +3,7 @@
 ## dependencies/conda/envs directory.
 ## You can manually activate the environment
 ## using the following command
-## $ conda activate path/to/mSpreadComp_env/dependencies/conda/envs/environment_name
+## $ conda activate path/to/gspreadcomp_env/dependencies/conda/envs/environment_name
 
 #### LITTLE HELP ####
 ## All modules installed here will be named as "name_env"
@@ -45,9 +45,9 @@ fi
 #### Installation started ####
 
 #Run this from the repository directory
-mSPREAD_CONDA_ENVIRONMENT_PATH=$CONDA_PREFIX/envs/mSpreadComp_env
+mSPREAD_CONDA_ENVIRONMENT_PATH=$CONDA_PREFIX/envs/gspreadcomp_env
 
-#Save the mSpreadComp_env path to the config file
+#Save the gspreadcomp_env path to the config file
 echo mSPREAD_CONDA_ENVIRONMENT_PATH="$mSPREAD_CONDA_ENVIRONMENT_PATH" > $(dirname $0)/temp
 cat $(dirname $0)/temp  $(dirname $0)/.config_std > $(dirname $0)/config
 rm -f $(dirname $0)/temp 
@@ -55,21 +55,21 @@ rm -f $(dirname $0)/temp
 source $(dirname $0)/config
 source $(dirname $0)/installation_utils.sh
 
-## Moving the installation scripts to mSpreadComp_env's environment
+## Moving the installation scripts to gspreadcomp_env's environment
 # check if mudoger_env already exists
 verify_if_main_env_exists "$mSPREAD_CONDA_ENVIRONMENT_PATH"
 if [ $main_there == "yes" ]  # if yes, skip installation
 then  
-echo "Skip mSpreadComp conda env installation. Moving forward..."
+echo "Skip gspreadcomp conda env installation. Moving forward..."
 else 
-echo "Installing mSpreadComp conda env..."  # if no, move forward
+echo "Installing gspreadcomp conda env..."  # if no, move forward
 
 start_pre_configuration
 
 fi
 
 
-echo "your mSpreadComp's path is $mSPREAD_CONDA_ENVIRONMENT_PATH"
+echo "your gspreadcomp's path is $mSPREAD_CONDA_ENVIRONMENT_PATH"
 
 yes | cp -rf $DEPENDENCIES_SCRIPTS_PATH $mSPREAD_CONDA_ENVIRONMENT_PATH
 
@@ -93,9 +93,9 @@ yes | cp -rf $(dirname $0)/config  $mSPREAD_CONDA_ENVIRONMENT_PATH/bin
 
 ## Giving the user the option of which modules to install
 
-echo -e "\n### WELCOME TO mSpreadComp! ###\n"
-echo "Do you want to install the complete mSpreadComp pipeline?"
-echo "- Main: mSpreadComp metagenome analysis workflow"
+echo -e "\n### WELCOME TO gspreadcomp! ###\n"
+echo "Do you want to install the complete gspreadcomp pipeline?"
+echo "- Main: gspreadcomp metagenome analysis workflow"
 echo "- Accessory: Antimicrobial genes annotation with DeepARG [Current inactive]"
 echo "- Accessory: Taxonomical assigning with GTDB-tk"
 echo "- Accessory: Genome Quality estimation with CheckM"
@@ -122,7 +122,7 @@ do
 done
 if [ $choose = n -o $choose = N ];
 then
-	echo "Do you want to install mSpreadComp main workflow? [Y/N]"
+	echo "Do you want to install gspreadcomp main workflow? [Y/N]"
 	while :
 	do
 		read choose
@@ -131,7 +131,7 @@ then
 			install_main=$choose
 			break
 		elif [ $choose = n -o $choose = N ]; then
-			echo "Installation of mSpreadComp main workflow denied"
+			echo "Installation of gspreadcomp main workflow denied"
 			break
 		else
 			echo "Command not found, please, try again"
@@ -194,7 +194,7 @@ fi
 ################# INSTALLING CHOSEN MODULES #################
 
 
-echo -e "\nThe mSpreadComp's installation will begin..\n"
+echo -e "\nThe gspreadcomp's installation will begin..\n"
 
 
 coffe_time
@@ -202,7 +202,7 @@ coffe_time
 
 if [ ! -z $install_main ];
 then
-	echo "-----> installing main mSpreadComp"
+	echo "-----> installing main gspreadcomp"
 	
 	################################################################
 	## Installing all necessary R and R packs ##
