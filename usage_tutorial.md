@@ -77,12 +77,12 @@ For a detailed description of the other files, the user can go to the [**GTDB-tk
 
 ### Genome Quality Estimation using CheckM
 
-The quality module in `gSpreadComp` uses CheckM to estimate the quality of genomes. To run this module, use the `mspreadcomp quality` command. Below are the available options for this module:
+The quality module in `gSpreadComp` uses CheckM to estimate the quality of genomes. To run this module, use the `gspreadcomp quality` command. Below are the available options for this module:
 
 ```console
-mspreadcomp quality --help
+gspreadcomp quality --help
 
-Usage: mspreadcomp quality [options] --genome_dir genome_folder -o output_dir
+Usage: gspreadcomp quality [options] --genome_dir genome_folder -o output_dir
 Options:
     --genome_dir STR    folder with the genomes to estimate quality (in fasta format)
     --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
@@ -99,7 +99,7 @@ Options:
 Assuming you have placed your genomes in `01_input_genomes` and your output folder is `04_gspread_checkm_quality`, your command will look like:
 
 ```console
-$ mspreadcomp quality --genome_dir ./01_input_genomes/ --extension fa -o ./04_gspread_checkm_quality/ -t 25
+$ gspreadcomp quality --genome_dir ./01_input_genomes/ --extension fa -o ./04_gspread_checkm_quality/ -t 25
 ```
 
 Run this command, and once it's completed, you can proceed to inspect the output in the `04_gspread_checkm_quality` folder.
@@ -127,12 +127,12 @@ For a detailed description of the other files, the user can go to the [**CheckM*
 
 ### ARGs Annotation using DeepARG
 
-The ARGs module in `gSpreadComp` uses DeepARG to predict the Antimicrobial Resistance Genes (ARGs) in a genome. To run this module, use the `mspreadcomp args` command. Below are the available options for this module:
+The ARGs module in `gSpreadComp` uses DeepARG to predict the Antimicrobial Resistance Genes (ARGs) in a genome. To run this module, use the `gspreadcomp args` command. Below are the available options for this module:
 
 ```console
-mspreadcomp args --help
+gspreadcomp args --help
 
-Usage: mspreadcomp args [options] --genome_dir genome_folder -o output_dir
+Usage: gspreadcomp args [options] --genome_dir genome_folder -o output_dir
 Options:
     --genome_dir STR    folder with the genomes to be classified (in fasta format)
     --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
@@ -153,7 +153,7 @@ Options:
 Assuming you have placed your genomes in `01_input_genomes` and your output folder is `05_gspread_deeparg_args`, your command will look like:
 
 ```console
-$ mspreadcomp args --genome_dir ./01_input_genomes/ --extension fa -o ./05_gspread_deeparg_args/
+$ gspreadcomp args --genome_dir ./01_input_genomes/ --extension fa -o ./05_gspread_deeparg_args/
 ```
 
 Run this command, and once it's completed, you can proceed to inspect the output in the `05_gspread_deeparg_args` folder.
@@ -188,12 +188,12 @@ After running the ARGs Module, you will find the output in the specified output 
 
 ### Plasmid Identification using PlasFlow
 
-The Plasmid module in `gSpreadComp` uses PlasFlow to predict if a sequence within a fasta file is a chromosome, plasmid, or undetermined. To run this module, use the `mspreadcomp plasmid` command. Below are the available options for this module:
+The Plasmid module in `gSpreadComp` uses PlasFlow to predict if a sequence within a fasta file is a chromosome, plasmid, or undetermined. To run this module, use the `gspreadcomp plasmid` command. Below are the available options for this module:
 
 ```console
-mspreadcomp plasmid --help
+gspreadcomp plasmid --help
 
-Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
+Usage: gspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
 Options:
     --genome_dir STR    folder with the genomes to be classified (in fasta format)
     --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
@@ -210,7 +210,7 @@ Options:
 Assuming you have placed your genomes in `01_input_genomes` and your output folder is `06_gspread_plasmids`, your command will look like this:
 
 ```console
-$ mspreadcomp plasmid --genome_dir ./01_input_genomes/ --extension fa -o ./06_gspread_plasmids/
+$ gspreadcomp plasmid --genome_dir ./01_input_genomes/ --extension fa -o ./06_gspread_plasmids/
 ```
 
 Run this command, and once it's completed, you can proceed to inspect the output in the `06_gspread_plasmids` folder. Below is the expected output structure and explanation of each output file.
@@ -249,12 +249,12 @@ After running the Plasmid Module, you will find the output in the specified outp
 
 ### Pathogens Annotation using Virulence Factors Databases
 
-The Pathogens module in `gSpreadComp` aligns the provided genomes against selected Virulence Factors databases and formats the output. To run this module, use the `mspreadcomp pathogens` command. Below are the available options for this module:
+The Pathogens module in `gSpreadComp` aligns the provided genomes against selected Virulence Factors databases and formats the output. To run this module, use the `gspreadcomp pathogens` command. Below are the available options for this module:
 
 ```console
-mspreadcomp pathogens --help
+gspreadcomp pathogens --help
 
-Usage: mspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
+Usage: gspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
 Options:
     --genome_dir STR    folder with the genomes to be aligned against Virulence factors (in fasta format)
     --extension STR     fasta file extension (e.g. fa or fasta) [default: fa]
@@ -273,7 +273,7 @@ Options:
 Assuming you have placed your genomes in `01_input_genomes` and your output folder is `07_gspread_pathogens`, your command will look like:
 
 ```console
-$ mspreadcomp pathogens --genome_dir ./01_input_genomes/ --extension fa -o ./07_gspread_pathogens/ --vf both -t 25
+$ gspreadcomp pathogens --genome_dir ./01_input_genomes/ --extension fa -o ./07_gspread_pathogens/ --vf both -t 25
 ```
 
 Run this command, and once it's completed, you can proceed to inspect the output in the `07_gspread_pathogens` folder.
