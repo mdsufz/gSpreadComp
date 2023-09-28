@@ -1,4 +1,4 @@
-mSPREAD_CONDA_ENVIRONMENT_PATH=/mnt/tools/miniconda3/envs/mSpreadComp_env
+mSPREAD_CONDA_ENVIRONMENT_PATH=/mnt/tools/miniconda3/envs/gspreadcomp_env
 mSPREAD_DEPENDENCIES_PATH=$mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
 
 mSPREAD_DEPENDENCIES_ENVS_PATH=$mSPREAD_DEPENDENCIES_PATH/conda/envs
@@ -10,4 +10,4 @@ INSTALLATION_SCRIPTS_PATH=installation/installation_scripts
 
 mSPREAD_WORK_SCRIPTS=src/scripts
 mSPREAD_WORK_MODULES=src/modules
-mSPREAD_MASTER_SCRIPT=src/mspreadcomp
+mSPREAD_MASTER_SCRIPT=src/gspreadcomp
