@@ -2,7 +2,7 @@
 
 help_message () {
 	echo ""
-	echo "Usage: mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir"
+	echo "Usage: gspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir"
 	echo "Options:"
 	echo ""
 	echo "	--genome_dir STR	folder with the genomes to be classified (in fasta format)"
@@ -48,7 +48,7 @@ done
 
 # loading conda environment
 echo '------- START MODULE Plasmid Prediction'
-conda activate mSpreadComp_env
+conda activate gspreadcomp_env
 config_path="$(which config)"
 database="${config_path/config/database}"
 source $config_path
