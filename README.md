@@ -16,7 +16,7 @@
 ### Comprehensive Workflow
 `gSpreadComp` amalgamates genome annotation, normalization, and sequence comparison in a unified approach, systematically quantifying gene spread and integrating plasmid-mediated gene transfer annotation with the whole microbiome community in a genome-reference independent manner and furnishing a sophisticated QMRA metric.
 
-![ScreenShot](https://github.com/JotaKas/mSpreadComp/blob/main/test_data/01_Kasmanas_gSpread_Fig_1.png)
+![ScreenShot](https://github.com/JotaKas/gSpreadComp/blob/main/test_data/01_Kasmanas_gSpread_Fig_1.png)
 
 # Requirements
 
@@ -150,7 +150,7 @@ conda activate gSpreadComp_env
 ### Command-Line Usage
 `gSpreadComp` provides several modules, each performing a specific task within the pipeline. The quick command-line usage is as follows:
 ```sh
-mspreadcomp --help
+gspreadcomp --help
 ```
 
 ### Modules and Their Descriptions
@@ -158,7 +158,7 @@ mspreadcomp --help
 
 #### 1. Taxonomy Assignment
 ```sh
-mspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir
+gspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir
 ```
 - Assigns taxonomy to genomes using GTDBtk v2.
 - Options:
@@ -169,7 +169,7 @@ mspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir
 
 #### 2. Genome Quality Estimation
 ```sh
-mspreadcomp quality [options] --genome_dir genome_folder -o output_dir
+gspreadcomp quality [options] --genome_dir genome_folder -o output_dir
 ```
 - Estimates genome completeness and contamination using CheckM.
 - Options:
@@ -181,7 +181,7 @@ mspreadcomp quality [options] --genome_dir genome_folder -o output_dir
 
 #### 3. ARG Prediction
 ```sh
-mspreadcomp args [options] --genome_dir genome_folder -o output_dir
+gspreadcomp args [options] --genome_dir genome_folder -o output_dir
 ```
 - Predicts the Antimicrobial Resistance Genes (ARGs) in a genome using DeepARG.
 - Options:
@@ -197,7 +197,7 @@ mspreadcomp args [options] --genome_dir genome_folder -o output_dir
 
 #### 4. Plasmid Prediction
 ```sh
-mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
+gspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
 ```
 - Predicts if a sequence within a fasta file is a chromosome, plasmid, or undetermined using Plasflow.
 - Options:
@@ -209,7 +209,7 @@ mspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
 
 #### 5. Pathogen Alignment
 ```sh
-mspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
+gspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
 ```
 - Aligns provided genomes to Virulence Factors databases and formats the output.
 - Options:
@@ -222,9 +222,9 @@ mspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
 
 #### 6. Main Analysis
 ```sh
-mspreadcomp mspread [options] -o output_dir
+gspreadcomp gspread [options] -o output_dir
 ```
-- Runs the main `mSpreadComp` to compare spread and plasmid-mediated HGT.
+- Runs the main `gspreadComp` to compare spread and plasmid-mediated HGT.
 - Options:
   - `--checkm STR`: Path to the formatted Quality estimation dataframe
   - `--gene STR`: Path to the formatted target Gene dataframe to calculate the spread
