@@ -2,7 +2,7 @@
 
 help_message () {
 	echo ""
-	echo "Usage: mspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir"
+	echo "Usage: gspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir"
 	echo "Options:"
 	echo ""
 	echo "	--genome_dir STR	folder with the bins to be classified (in fasta format)"
@@ -44,7 +44,7 @@ done
 
 # loading conda environment
 echo '-------> START MODULE TAXONOMY'
-conda activate mSpreadComp_env
+conda activate gspreadcomp_env
 config_path="$(which config)"
 database="${config_path/config/database}"
 source $config_path
@@ -68,7 +68,7 @@ fi
 if [ -z "$GTDBTK_DATA_PATH" ]; then 
 	echo "No GTDBtk database found."
 	echo "Please make sure you installed the GTDBtk database and configured its path"
-	echo "You can follow the instructions on the mSpreadComp GitHub page"
+	echo "You can follow the instructions on the gspreadcomp GitHub page"
 	help_message; exit 1
 fi
 
