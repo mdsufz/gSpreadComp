@@ -2,7 +2,7 @@
 
 help_message () {
 	echo ""
-	echo "Usage: mspreadcomp mspread [options] -o output_dir"
+	echo "Usage: gspreadcomp gspread [options] -o output_dir"
 	echo "Options:"
 	echo ""
 	echo "	--checkm	STR		Path to the formatted Quality estimation dataframe"
@@ -59,8 +59,8 @@ done
 ########################################################################################################
 
 # loading conda environment
-echo '-------> START MODULE mSpread'
-#conda activate mSpreadComp_env
+echo '-------> START MODULE gspread'
+#conda activate gspreadcomp_env
 config_path="$(which config)"
 database="${config_path/config/database}"
 source $config_path
@@ -80,7 +80,7 @@ out=`realpath $out`
 initial_processing_path=$out/genome_quality_norm
 mkdir $initial_processing_path
 
-Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk \
+Rscript $gspread_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk \
  --checkm $checkm \
  --gene $gene \
  --meta $meta \
