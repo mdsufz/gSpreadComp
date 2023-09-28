@@ -11,7 +11,7 @@
 #VFDB and Victors
 
 
-################# Installing mSpreadComp #################
+################# Installing gspreadcomp #################
 
 ### TOOLS THAT WILL BE INSTALLED IN THIS MODULE ###
 ## - R and relevant R packs
@@ -22,7 +22,7 @@
 ## - BLAST
 ## - Victors and VFDB databases
 
-echo "### mSpreadComp installation started ###\n"
+echo "### gspreadcomp installation started ###\n"
 source installation/config           
 source installation/installation_utils.sh
 
