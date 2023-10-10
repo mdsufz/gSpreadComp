@@ -1,15 +1,11 @@
 #!/usr/bin/env Rscript
 
-#Test path
-
-#setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
-
-#Select Samples based on number of MAGs recovered
+#Select Samples based on the number of MAGs recovered
 #Describe MAGs and Save figures
 
 #### Load libs and inputs
 
-library("optparse")
+suppressPackageStartupMessages({library("optparse")
 library("dplyr")
 library("tidyr")
 library("ggplot2")
@@ -17,21 +13,8 @@ library("patchwork")
 library("data.table")
 library("viridis")
 library("gridExtra")
-library("ggforce")
+library("ggforce")})
 
-
-#target_gene <- "Gene_id"
-#target_gene <- "Gene_class"
-
-#Young samples to remove -> REMOVE ON THE FINAL VERSION
-
-young_samples <- c("EA_SRX3062589", "EA_SRX3062590", "EA_SRX3062593", "EA_SRX3062617", "EA_SRX3062647", 
-                   "EA_SRX3062648", "EA_SRX3062649", "EA_SRX3062650", "EA_SRX3062651", "EA_SRX3062652", 
-                   "EA_SRX3062653", "EA_SRX3062654", "EA_SRX3062655", "EA_SRX3062656", "EA_SRX3062657", 
-                   "EA_SRX3062658", "EA_SRX3062660", "EA_SRX3062661", "EA_SRX3062662", "EA_SRX3062663", 
-                   "EA_SRX3062664")
-
-####
 
 option_list = list(
   make_option(c("--gtdb"), type="character", default=NULL, 
@@ -47,8 +30,10 @@ option_list = list(
   make_option(c("--target_gene_col"), type="character", default=NULL, 
               help="Name of the Target Gene column [default: Gene_id]", metavar="character"),
   make_option(c("-o", "--out"), type="character",
-              help="output directory path to save formated tables", metavar="character")
-); 
+              help="output directory path to save formatted tables", metavar="character")
+);
+
+#1) Load metadata, mags taxa, and mags quality
 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
@@ -61,24 +46,6 @@ meta_df <- data.table::fread(opt$meta)
 n_mag <- opt$nmag_filter
 target_gene <- opt$target_gene_col
 
-
-#1) Load metadata, mags taxa, and mags quality
-
-############ TEST ##############
-
-# checkm_df <- data.table::fread(file = "test_data/checkm_df_format_mSpread.csv")
-# 
-# #####
-# gtdb_df <- data.table::fread(file = "test_data/gtdb_df_format_mSpread.csv")
-# 
-# #####
-# gene_df <- data.table::fread(file = "test_data/deeparg_df_format_mSpread.csv")
-# 
-# #####
-# meta_df <- data.table::fread(file = "test_data/meta_df_format_mSpread.csv")
-
-meta_df <- meta_df %>%
-  filter(!(Library %in% young_samples))
 
 ####2) Merger
 mags_data <- merge.data.frame(x = checkm_df,
@@ -164,8 +131,8 @@ mag.contamination.hist <- ggplot(mags_data, aes(x = Contamination, fill = cut(Co
 
 #mag.contamination.hist
 
-#2) Filter out samples based on number of MAGs
-#Calculate total number of bins recovered per sample
+#2) Filter out samples based on the number of MAGs
+#Calculate the total number of bins recovered per sample
 mags.per.sample <- meta_df %>%
   select(Library, Genome) %>%
   unique(.) %>%
@@ -220,7 +187,7 @@ mags.per.sample.gene.prev <- gene_df %>%
   mutate(gene.genome.prev = present.gene/t_mags)
 
 ##########
-# count number of unique args per mag
+# count the number of unique args per mag
 avg_unique_genes <- tibble()
 
 for (t in target_classes) {
