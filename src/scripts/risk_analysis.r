@@ -5,15 +5,18 @@
 #setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
 
 #### Load libs and inputs
-
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
 library("tidyr")
 library("ggplot2")
 library("data.table")
 library("ggpubr")
-library("MCDA")
+library("rstatix")
+library("tidyverse")
+library("purrr")
+library("progress")
+library("MCDA")})
 
 
 option_list = list(
@@ -53,23 +56,21 @@ patho_db <-data.table::fread(opt$patho_db)
 vf_df <- data.table::fread(opt$vf)
 plas_df <- data.table::fread(opt$plasmid)
 
-#target_gene <- "Gene_id"
-#target_gene <- "Gene_class"
-
-#### TEST INPUT ####
-
-#mags_data_df <- data.table::fread("03_mspread_analysis_out/genome_quality_norm/genome_data_merged.csv")
-#selected_lib <- data.table::fread("03_mspread_analysis_out/genome_quality_norm/selected_samples.csv")
-#gene_df <- data.table::fread("test_data/deeparg_df_format_mSpread.csv")
-#gene_df <- data.table::fread("02_format_input_dfs/deeparg_df_format_mSpread.csv")
-#norm_gene_prev_df <- data.table::fread("03_mspread_analysis_out/genome_quality_norm/gene_prevalence_per_library.csv")
-
-#vf_df <- data.table::fread("02_format_input_dfs/victors_df_format_mSpread.csv")
-#patho_db <- data.table::fread("/mnt/mSpreadComp_test/mSpreadComp/installation/dependencies/patho_ncbi_20230222_taxa.csv")
-#plas_df <- data.table::fread("02_format_input_dfs/plasflow_df_format_mSpread.csv")
-
-#tax_level <- "Phylum"
-#out.path <- "03_mspread_analysis_out"
+# target_gene <- "Gene_id"
+# # #target_gene <- "Gene_class"
+# # 
+# # #### TEST INPUT ####
+# # 
+# mags_data_df <- data.table::fread("08_gspread_results/genome_quality_norm/genome_data_merged.csv")
+# selected_lib <- data.table::fread("08_gspread_results/genome_quality_norm/selected_samples.csv")
+# gene_df <- data.table::fread("05_gspread_deeparg_args/deeparg_df_combined_mSpreadformat.csv")
+# norm_gene_prev_df <- data.table::fread("08_gspread_results/genome_quality_norm/gene_prevalence_per_library.csv")
+# vf_df <- data.table::fread("07_gspread_pathogens/victors_ann_format.csv")
+# patho_db <- data.table::fread("patho_ncbi_20230222_taxa.csv")
+# plas_df <- data.table::fread("06_gspread_plasmids/plasflow_output_combined.csv")
+# # 
+# tax_level <- "Phylum"
+# out.path <- "08_gspread_results"
 
 #### Process initial load data ####
 
@@ -151,7 +152,7 @@ dev.off()
 
 #Count Unique VF per MAG
 vf_count <- vf_df %>%
-  select(Victor_VF_found, Genome, Victor_VF_class) %>%
+  select(VF_found, Genome, VF_class) %>%
   unique(.) %>%
   count(Genome) %>%
   as.data.frame(.) %>%
@@ -207,7 +208,7 @@ mags_data_df %>%
 dev.off()
 ### VF : VFs per Taxa per Diet ###
 
-pdf(paste0(out.path, "/pathogens_results/", "boxplot_Phylum_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_", tax_level, "_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>%
@@ -224,7 +225,7 @@ mags_data_df %>%
 
 dev.off()
 
-pdf(paste0(out.path, "/pathogens_results/", "boxplot_Phylum_filtered_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_", tax_level, "_filtered_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>%
@@ -243,7 +244,7 @@ mags_data_df %>%
 dev.off()
 
 
-pdf(paste0(out.path, "/pathogens_results/", "boxplot_Phylum_Patho_target_uniqueVFs_plot.pdf"),
+pdf(paste0(out.path, "/pathogens_results/", "boxplot_", tax_level, "_Patho_target_uniqueVFs_plot.pdf"),
     width = 7, height = 5)
 
 mags_data_df %>%
@@ -260,6 +261,7 @@ dev.off()
 
 ##
 #### Perform Pairwise analyses on selected target tax level
+
 dat <- mags_data_df %>%
   filter(pathogen_potential != "High")
 
@@ -284,33 +286,124 @@ mean_gene_target <- dat %>%
 
 #Do the test
 #Select only Phylum present in all Target
-select.tax <- mean_gene_target %>%
-  group_by(across(all_of(tax_level))) %>%
-  summarise(n = n_distinct(Target)) %>%
-  filter(n == length(unique(dat$Target))) %>%
-  as.data.frame(.)
+###CHECK IF NEEDED
+# select.tax <- mean_gene_target %>%
+#   group_by(across(all_of(tax_level))) %>%
+#   summarise(n = n_distinct(Target)) %>%
+#   filter(n == length(unique(dat$Target))) %>%
+#   as.data.frame(.)
+# 
+# select.tax <- as.character(select.tax[,1])
+# 
+# dat <- dat %>%
+#   filter(get(tax_level) %in% select.tax)
 
-select.tax <- as.character(select.tax[,1])
 
-dat <- dat %>%
-  filter(get(tax_level) %in% select.tax)
 
-#TO DO LIKE THIS ALL PAIRWISE MUST BE POSSIBLE !
-stat.test <- dat %>%
-  group_by(across(all_of(tax_level))) %>%
-  rstatix::t_test(unique_vfs ~ Target, p.adjust.method = "bonferroni")
+######################################################################################
 
-# Remove unnecessary columns and display the outputs
-stat.test.select <- stat.test %>%
-  select(-.y., -statistic, -df) %>%
-  filter(!(p.adj.signif == "ns"))
+#####
+#Create function to remove special char
+sanitize_string <- function(string) {
+  # Use gsub to replace non-alphanumeric characters (excluding spaces) with an empty string
+  sanitized <- gsub("[^[:alnum:][:space:]]", "", string)
+  return(sanitized)
+}
 
-# # Add statistical test p-values
-stat.test.select <- stat.test.select %>% rstatix::add_xy_position(x = "Target")
-# myplot + ggpubr::stat_pvalue_manual(stat.test, label = "p.adj.signif")
+########## Speedup function ####
+perform_t_tests <- function(df, tax_level) {
+  
+  compute_pairwise <- function(gene_class, sub_df, pb) {
+    targets <- unique(sub_df$Target)
+    
+    if (length(targets) < 2) {
+      pb$tick(length(targets))
+      map_df(targets, ~ setNames(data.frame(
+        gene_class = gene_class,
+        .y. = NA,
+        group1 = NA,
+        group2 = NA,
+        n1 = NA,
+        n2 = NA,
+        statistic = NA,
+        df = NA,
+        p = NA,
+        notes = paste("Not enough groups for comparison within this", tax_level)
+      ), c(tax_level, ".y.", "group1", "group2", "n1", "n2", "statistic", "df", "p", "notes")))
+    } else {
+      pb$tick(choose(length(targets), 2))
+      combn(targets, 2, simplify = FALSE) %>%
+        map_df(~ {
+          data_pair <- sub_df %>% filter(Target %in% .x)
+          data_pair$Target <- droplevels(data_pair$Target)
+          
+          if (all(table(data_pair$Target) >= 2)) {
+            data_pair %>%
+              group_by(!!sym(tax_level)) %>%
+              rstatix::t_test(
+                unique_vfs ~ Target, 
+                p.adjust.method = "bonferroni"
+              ) %>%
+              mutate(notes = NA)
+          } else {
+            setNames(data.frame(
+              gene_class = gene_class,
+              .y. = NA,
+              group1 = .x[1],
+              group2 = .x[2],
+              n1 = NA,
+              n2 = NA,
+              statistic = NA,
+              df = NA,
+              p = NA,
+              notes = "Not enough observations in each group for comparison"
+            ), c(tax_level, ".y.", "group1", "group2", "n1", "n2", "statistic", "df", "p", "notes"))
+          }
+        })
+    }
+  }
+  
+  # Calculate total steps for the progress bar
+  total_steps <- df %>%
+    group_by(!!sym(tax_level)) %>%
+    summarise(n_combinations = sum(ifelse(n_distinct(Target) < 2, n_distinct(Target), choose(n_distinct(Target), 2)))) %>%
+    pull(n_combinations) %>%
+    sum()
+  
+  # Create a progress bar
+  pb <- progress_bar$new(
+    format = "[:bar] :percent Elapsed: :elapsed",
+    total = total_steps,
+    width = 60
+  )
+  
+  results_df <- df %>%
+    group_by(!!sym(tax_level)) %>%
+    group_map(~ compute_pairwise(.x[[tax_level]][1], .x, pb), .keep = TRUE) %>%
+    bind_rows()
+  
+  results_df$p_adjusted <- p.adjust(results_df$p, method = "bonferroni")
+  
+  results_df <- results_df %>%
+    mutate(
+      p.adj.signif = case_when(
+        is.na(p_adjusted) ~ NA_character_,
+        p_adjusted < 0.001 ~ '***',
+        p_adjusted >= 0.001 & p_adjusted < 0.01 ~ '**',
+        p_adjusted >= 0.01 & p_adjusted < 0.05 ~ '*',
+        p_adjusted >= 0.05 & p_adjusted < 0.1 ~ '.',
+        p_adjusted >= 0.1 ~ 'ns'
+      )
+    )
+  
+  return(results_df)
+}
 
-#Create individual plots
-#palette = c("#F8766D","#A3A500","#00BF7D","#00B0F6","#E76BF3")
+dat$Target <- factor(dat$Target, levels = sort(unique(dat$Target)))
+
+results_df <- perform_t_tests(dat, tax_level)
+
+#### Create Graphs ####
 
 graphs <- dat %>%
   group_by(across(all_of(tax_level))) %>%
@@ -321,26 +414,62 @@ graphs <- dat %>%
     ), 
     result = "plots"
   )
-#graphs
 
-variables <- as.character(as.data.frame(graphs)[, tax_level])
-plots <- graphs$plots %>% purrr::set_names(variables)
-for(variable in variables){
+######
+# Identify all unique target groups
+all_targets <- sort(unique(dat$Target))
+
+# Generate a consistent color palette for all target groups
+color_palette <- scales::hue_pal()(length(all_targets))
+names(color_palette) <- all_targets
+
+# Annotate the plots using the provided significance levels in results_df
+graphs$plots <- map2(graphs$plots, graphs[[tax_level]], function(p, current_tax_value) {
   
-  stat.test.i <- filter(stat.test.select, get(tax_level) == variable) 
-  graph.i <- plots[[variable]] + 
-    labs(title = variable) +
-    ggpubr::stat_pvalue_manual(stat.test.i, label = "p.adj.signif")
+  # 1. Extract Relevant Annotations
+  annotations_for_this_gene_class <- results_df %>% 
+    filter(!!sym(tax_level) == current_tax_value) %>% 
+    select(group1, group2, p.adj.signif)
   
-  pdf(file = paste0(out.path,"/pathogens_results/pairwise_VF_per_tax_boxplots/boxplot_tax_VF_", variable, ".pdf"),
-      width = 12, height = 8)
+  # Initialize a base y-position
+  base_y_position <- max(p$data$unique_vfs, na.rm=TRUE) + 0.05
   
-  print(graph.i)
+  # 2. Iterate Over Each Annotation
+  for (i in 1:nrow(annotations_for_this_gene_class)) {
+    ann <- annotations_for_this_gene_class[i, ]
+    
+    # Skip "ns" annotations or NA values
+    if (is.na(ann$p.adj.signif) || ann$p.adj.signif == "ns") {
+      next
+    }
+    
+    # 3. Add Annotations to the Plot
+    p <- p + geom_signif(
+      comparisons = list(c(ann$group1, ann$group2)), 
+      test = NULL, 
+      annotations = ann$p.adj.signif, 
+      y_position = base_y_position  # Use the current base y-position
+    )
+    
+    # Increment the base y-position for the next annotation
+    base_y_position <- base_y_position + 0.05
+  }
   
+  # Use the consistent color palette and add the title
+  p <- p + 
+    scale_fill_manual(values = color_palette) + 
+    ggtitle(current_tax_value)
+  
+  pdf_file_path <- paste0(out.path,"/pathogens_results/pairwise_VF_per_tax_boxplots/boxplot_tax_VF_", 
+                          sanitize_string(current_tax_value), ".pdf")
+  pdf(file = pdf_file_path, width = 12, height = 8)
+  print(p)
   dev.off()
-}
+  
+  return(p)
+})
 
-
+################################################################################################
 
 #Plasmid gene and pathogens
 plas_df <- plas_df %>%
@@ -359,7 +488,7 @@ all_df <- merge.data.frame(all_df,
 
 all_df <- all_df %>%
   group_by(Genome) %>%
-  mutate(unique_gene_target = n_distinct(Gene_id))
+  mutate(unique_gene_target = n_distinct(!!sym(target_gene)))
 
 ####
 all_df.vfs <- merge.data.frame(vf_df,
@@ -386,23 +515,20 @@ all_df.vfs <- merge.data.frame(all_df.vfs,
 
 all_df.vfs <- all_df.vfs %>%
   group_by(Genome) %>%
-  mutate(unique_gene_target = n_distinct(Gene_id, na.rm = T))
-
-
+  mutate(unique_gene_target = n_distinct(!!sym(target_gene), na.rm = T))
 
 vfs_per_seq_type_count <- all_df.vfs %>%
   group_by(Genome, sequence_type) %>%
-  summarise(n=n_distinct(Victor_VF_found, na.rm = T)) %>%
+  summarise(n=n_distinct(VF_found, na.rm = T)) %>%
   pivot_wider(names_from = sequence_type, values_from = n) %>%
   replace(is.na(.), 0) %>%
   rename(unique_vf_in_chromosome = chromosome,
          unique_vf_in_plasmid = plasmid,
          unique_vf_in_unclassified = unclassified)
 
-
 gene_per_seq_type_count <- all_df %>%
   group_by(Genome, sequence_type) %>%
-  summarise(n=n_distinct(Gene_id)) %>%
+  summarise(n=n_distinct(!!sym(target_gene))) %>%
   pivot_wider(names_from = sequence_type, values_from = n) %>%
   replace(is.na(.), 0) %>%
   rename(unique_gene_in_chromosome = chromosome,
@@ -468,13 +594,15 @@ stat.test.gene.patho <- all_df %>%
   select(pathogen_potential, unique_gene_target, Genome) %>%
   unique(.) %>%
   as.data.frame(.) %>%
-  #group_by(pathogen_potential) %>%
+  group_by(pathogen_potential) %>%
+  filter(n() >= 2) %>%
+  ungroup() %>%
+  droplevels() %>%
   rstatix::t_test(unique_gene_target ~ pathogen_potential, p.adjust.method = "bonferroni")
 
 stat.test.gene.patho <- stat.test.gene.patho %>%
-  filter(p.adj.signif != 'ns') %>%
+  #filter(p.adj.signif != 'ns') %>%
   rstatix::add_xy_position(x = "pathogen_potential")
-
 
 pdf(paste0(out.path, "/pathogens_results/", "boxplot_Patho_uniqueGene_plot.pdf"),
     width = 7, height = 5)
@@ -482,7 +610,11 @@ pdf(paste0(out.path, "/pathogens_results/", "boxplot_Patho_uniqueGene_plot.pdf")
 ggboxplot(all_df %>%
             select(pathogen_potential, unique_gene_target, Genome) %>%
             unique(.) %>%
-            as.data.frame(.), x = "pathogen_potential", y = "unique_gene_target",
+            as.data.frame(.) %>%
+            group_by(pathogen_potential) %>%
+            filter(n() >= 2) %>%
+            ungroup() %>%
+            droplevels(), x = "pathogen_potential", y = "unique_gene_target",
           fill = "pathogen_potential",
           xlab = "Pathogen Potential", ylab = "Total Unique Target Gene") +
   stat_pvalue_manual(stat.test.gene.patho) +
@@ -580,28 +712,27 @@ all_df %>%
 dev.off()
 
 
-all_df %>%
-  select(pathogen_potential, risk_criteria, Genome, Target, Phylum) %>%
-  unique(.) %>%
-  filter(pathogen_potential != "High") %>%
-  filter(Phylum %in% select.tax) %>%
-  ggplot(aes(x = Phylum, y = risk_criteria, fill = Target)) +
-  geom_boxplot() +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  labs(title = "Risk Measure per Phylum", x = "Phylum", y = "Risk Measure")
-
-
-all_df %>%
-  select(pathogen_potential, risk_criteria, Genome, Target, Phylum) %>%
-  unique(.) %>%
-  filter(pathogen_potential != "High") %>%
-  #filter(Phylum %in% select.tax) %>%
-  ggplot(aes(x = Target, y = risk_criteria, fill = Target)) +
-  geom_boxplot() +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  labs(title = "Risk Measure per Target", x = "Target", y = "Risk Measure")
+# all_df %>%
+#   select(pathogen_potential, risk_criteria, Genome, Target, !!sym(tax_level)) %>%
+#   unique(.) %>%
+#   filter(pathogen_potential != "High") %>%
+#   filter(!!sym(tax_level) %in% select.tax) %>%
+#   ggplot(aes(x = !!sym(tax_level), y = risk_criteria, fill = Target)) +
+#   geom_boxplot() +
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+#   labs(title = "Risk Measure per Tax level", x = tax_level, y = "Risk Measure")
+# 
+# 
+# all_df %>%
+#   select(pathogen_potential, risk_criteria, Genome, Target, !!sym(tax_level)) %>%
+#   unique(.) %>%
+#   filter(pathogen_potential != "High") %>%
+#   ggplot(aes(x = Target, y = risk_criteria, fill = Target)) +
+#   geom_boxplot() +
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+#   labs(title = "Risk Measure per Target", x = "Target", y = "Risk Measure")
 
 
 ##### Find the HGT in plasmids ####
@@ -611,12 +742,14 @@ cycle_sample_finder <- function(mags_info_table,
                                 target_gene_col = "Gene_id"){
   
   #5.x) Find cycles in the form of: Sample -> Taxa1 -> ARG -> Taxa2 -> Sample
-  cycles.df <- data.frame(matrix(nrow = 0, ncol = 4))
+  # cycles.df <- data.frame(matrix(nrow = 0, ncol = 4))
+  # 
+  # names(cycles.df) <-  c(sample_name_col,
+  #                        paste0(taxa_level_col,"1"),
+  #                        target_gene_col,
+  #                        paste0(taxa_level_col,"2"))
   
-  names(cycles.df) <-  c(sample_name_col,
-                         paste0(taxa_level_col,"1"),
-                         target_gene_col,
-                         paste0(taxa_level_col,"2"))
+  cycles.list <- list()
   
   
   n_iter <- length(unique(mags_info_table[, sample_name_col])) # Number of iterations of the loop
@@ -675,9 +808,8 @@ cycle_sample_finder <- function(mags_info_table,
             
             for (gene in gene.both) {
               
-              row <- c(s, tax[t1],
-                       gene, tax[t2])
-              cycles.df <- rbind.data.frame(cycles.df, row)
+              row <- c(s, tax[t1], gene, tax[t2])
+              cycles.list <- c(cycles.list, list(row))
               counter <- counter + 1
               
             }
@@ -694,8 +826,20 @@ cycle_sample_finder <- function(mags_info_table,
     setTxtProgressBar(pb, i)
     
   }
-  names(cycles.df) <- c(sample_name_col, paste0(taxa_level_col,"1"),
-                        target_gene_col, paste0(taxa_level_col,"2"))
+  # names(cycles.df) <- c(sample_name_col, paste0(taxa_level_col,"_1"),
+  #                       target_gene_col, paste0(taxa_level_col,"_2"))
+  
+  # Convert the list of rows to a data frame
+  if (length(cycles.list) > 0) {
+    cycles.df <- do.call(rbind.data.frame, cycles.list)
+    names(cycles.df) <- c(sample_name_col, paste0(taxa_level_col, "_1"),
+                          target_gene_col, paste0(taxa_level_col, "_2"))
+  } else {
+    # If no cycles were found, return an empty data frame with the correct column names
+    cycles.df <- data.frame(matrix(nrow = 0, ncol = 4))
+    names(cycles.df) <- c(sample_name_col, paste0(taxa_level_col, "_1"),
+                          target_gene_col, paste0(taxa_level_col, "_2"))
+  }
   
   close(pb) # Close the connection
   total_count <- counter
@@ -708,7 +852,7 @@ print("Finding Virulence factors involved in plasmid-mediated HGT:")
 
 cycles_found_list_vf <- list()
 all_cycles_found_df_vf <- tibble()
-tax_level = "Family"
+#tax_level = "Family"
 for (t in target_classes) {
   
   print(paste0("VFs plasmid-HGT calculation for ", t, ":"))
@@ -716,10 +860,10 @@ for (t in target_classes) {
   cycles_found <- cycle_sample_finder(mags_info_table = as.data.frame(all_df.vfs %>%
                                                                         filter(Target == t) %>%
                                                                         filter(sequence_type == "plasmid") %>%
-                                                                        drop_na(Victor_VF_found)),
+                                                                        drop_na(VF_found)),
                                       sample_name_col = "Library",
                                       taxa_level_col = tax_level,
-                                      target_gene_col = "Victor_VF_found")
+                                      target_gene_col = "VF_found")
   
   total_plas_df <- cycles_found[[1]]
   
@@ -732,9 +876,8 @@ for (t in target_classes) {
   
   
   if(nrow(total_plas_df) > 0){
-
-    total_plas_df$Target <- t
     
+    total_plas_df$Target <- t
     all_cycles_found_df_vf <- rbind.data.frame(all_cycles_found_df_vf, total_plas_df)
     
   }
@@ -746,18 +889,18 @@ print("Finding Target Gene involved in plasmid-mediated HGT:")
 
 cycles_found_list <- list()
 all_cycles_found_df <- tibble()
-tax_level = "Family"
+#tax_level <- "Family"
 for (t in target_classes) {
   
   print(paste0("Target Gene plasmid-HGT calculation for ", t, ":"))
   
   cycles_found <- cycle_sample_finder(mags_info_table = as.data.frame(all_df %>%
-                                                                        filter(Target == t) %>%
-                                                                        filter(sequence_type == "plasmid") %>%
-                                                                        drop_na(Gene_id)),
+                                                                       filter(Target == t) %>%
+                                                                       filter(sequence_type == "plasmid") %>%
+                                                                       drop_na(!!sym(target_gene))),
                                       sample_name_col = "Library",
                                       taxa_level_col = tax_level,
-                                      target_gene_col = "Gene_id")
+                                      target_gene_col = target_gene)
   
   total_plas_df <- cycles_found[[1]]
   
@@ -768,10 +911,11 @@ for (t in target_classes) {
   cycles_found_list[[t]][["percentage_of_plasmids_carring_gene"]] <- perc_cycles
   cycles_found_list[[t]][["plasmid_HGT_df"]] <- total_plas_df
   
-  total_plas_df$Target <- t
+
   
   if(nrow(total_plas_df) > 0){
     
+    total_plas_df$Target <- t
     all_cycles_found_df <- rbind.data.frame(all_cycles_found_df, total_plas_df)
     
   }
@@ -800,47 +944,46 @@ for (t in target_classes) {
   
   
   nodes.vfs <- all_df.vfs.tmp %>%
-    select(Victor_VF_found) %>%
+    select(VF_found) %>%
     unique(.) %>%
     mutate(risk_criteria = min(nodes.genomes$risk_criteria), Target = "VF", Library= "VF", 
            Domain= "VF", Phylum= "VF", Class= "VF",
            Order= "VF", Family= "VF", Genus= "VF", Species= "VF",
            pathogen_potential= "VF") %>%
     as.data.frame(.) %>%
-    rename(ID = Victor_VF_found)
+    rename(ID = VF_found)
   
   nodes.gene <- all_df.vfs.tmp %>%
-    select(Gene_id) %>%
+    select(!!sym(target_gene)) %>%
     unique(.) %>%
     mutate(risk_criteria = min(nodes.genomes$risk_criteria), Target = "Gene", Library= "Gene", 
            Domain= "Gene", Phylum= "Gene", Class= "Gene",
            Order= "Gene", Family= "Gene", Genus= "Gene", Species= "Gene",
            pathogen_potential= "Gene") %>%
     as.data.frame(.) %>%
-    rename(ID = Gene_id)
+    rename(ID = !!sym(target_gene))
   
   nodes.gene.genomes <- rbind.data.frame(nodes.genomes, nodes.gene)
-  #Create edges
   
+  # Create edges
   edge.genome.vfs <- table(all_df.vfs.tmp$Genome,
-                           all_df.vfs.tmp$Victor_VF_found) %>%
+                           all_df.vfs.tmp$VF_found) %>%
     as.data.frame(.) %>%
     rename(Source = Var1, Target = Var2) %>%
     filter(Freq > 0)
-  
   
   edge.genome.gene <- table(all_df.vfs.tmp$Genome,
-                            all_df.vfs.tmp$Gene_id) %>%
+                            all_df.vfs.tmp[[target_gene]]) %>%
     as.data.frame(.) %>%
     rename(Source = Var1, Target = Var2) %>%
     filter(Freq > 0)
   
-  
-  edge.gene.vf <- table(all_df.vfs.tmp$Gene_id,
-                        all_df.vfs.tmp$Victor_VF_found) %>%
+  edge.gene.vf <- table(all_df.vfs.tmp[[target_gene]],
+                        all_df.vfs.tmp$VF_found) %>%
     as.data.frame(.) %>%
     rename(Source = Var1, Target = Var2) %>%
     filter(Freq > 0)
+  
   
   
   edge.total <- rbind.data.frame(edge.genome.vfs,
@@ -890,8 +1033,8 @@ write.csv(x = mean_vfs_target,
 write.csv(x = select.tax,
           file = paste0(out.path, "/common_tax_target.csv"), row.names = F)
 
-## stat.test.select 
-write.csv(x = as.data.frame(stat.test.select) %>% select(-groups),
+## stat: results_df 
+write.csv(x = as.data.frame(results_df),
           file = paste0(out.path, "/pathogens_results/", "/stat_diff_tax_vf_target.csv"), row.names = F)
 
 ## stat.test.gene.patho
@@ -908,13 +1051,8 @@ write.csv(x = all_cycles_found_df,
 
 ## all_df.vfs
 write.csv(x = all_df.vfs,
-          file = paste0(out.path, "/magos_complete_annotation.csv"), row.names = F)
+          file = paste0(out.path, "/mags_complete_annotation.csv"), row.names = F)
 
 ## mags_data_df 
 write.csv(x = mags_data_df,
           file = paste0(out.path, "/mags_summary_results.csv"), row.names = F)
-
-
-
-
-
