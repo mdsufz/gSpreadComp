@@ -3,16 +3,16 @@
 #Format plasflow output for gSpreadComp
 
 #### Load libs and inputs
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
-library("tidyr")
+library("tidyr")})
 
 option_list = list(
   make_option(c("-i", "--input"), type="character", default=NULL, 
               help="Path to the created Plasflow results directories", metavar="character"),
   make_option(c("-o", "--out"), type="character",
-              help="output directory path to save formated tables", metavar="character")
+              help="output directory path to save formatted tables", metavar="character")
 ); 
 
 opt_parser = OptionParser(option_list=option_list)
@@ -93,6 +93,3 @@ write.csv(plasflow_bind_results_format, file = paste0(out.path, "/plasflow_combi
 
 write.csv(no_plasflow_found_bins, file = paste0(out.path, "/genomes_with_no_found_plasflow.csv"),
           row.names = F)
-
-
-
