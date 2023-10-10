@@ -26,7 +26,7 @@ start_pre_configuration() {
     conda create -y -n gspreadcomp_env r-essentials r-base gzip
     mamba env update --name $mSPREAD_CONDA_ENVIRONMENT_PATH --file $DEPENDENCIES_SCRIPTS_PATH/gspreadcomp_req.yml
     conda activate gspreadcomp_env
-    conda install -y -c conda-forge glpk
+    mamba install -y -c conda-forge glpk r-optparse
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda/envs
