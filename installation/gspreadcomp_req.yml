@@ -1,4 +1,4 @@
-name: mSpreadComp_env
+name: gspreadcomp_env
 channels:
   - conda-forge
   - bioconda
