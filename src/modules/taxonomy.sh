@@ -83,7 +83,7 @@ echo "Your GTDBtk database is at $GTDBTK_DATA_PATH"
 if [ -f "$out"/gtdbtk.bac120.summary.tsv ] || [ -f "$out"/gtdbtk.ar53.summary.tsv ];
 then echo "Skipping. GTDBtk files already found: "$out"/gtdbtk.bac120.summary.tsv";
 else
-gtdbtk classify_wf --extension $extension --cpus "$threads" --genome_dir $genome_dir --out_dir $out
+gtdbtk classify_wf --skip_ani_screen --extension $extension --cpus "$threads" --genome_dir $genome_dir --out_dir $out
 fi
 
 #Create merged results file
