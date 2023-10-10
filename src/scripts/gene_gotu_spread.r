@@ -1,14 +1,10 @@
 #!/usr/bin/env Rscript
 
-#Test path
-
-#setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
-
-#Select Samples based on number of MAGs recovered
+#Select Samples based on the number of MAGs recovered
 #Describe MAGs and Save figures
 
 #### Load libs and inputs
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
 library("tidyr")
@@ -16,13 +12,7 @@ library("ggplot2")
 library("data.table")
 library("viridis")
 library("pheatmap")
-library("forcats")
-
-#library("patchwork")
-#library("gridExtra")
-#library("ggforce")
-
-#library(stringr)
+library("forcats")})
 
 
 option_list = list(
@@ -53,19 +43,6 @@ norm_gene_prev_df <- data.table::fread(opt$norm_gene_prev)
 tax_level <- opt$spread_taxa
 target_gene <- opt$target_gene_col
 
-#target_gene <- "Gene_id"
-#target_gene <- "Gene_class"
-
-#### TEST INPUT ####
-
-#mags_data_df <- data.table::fread("test_output/genome_quality_norm/genome_data_merged.csv")
-#selected_lib <- data.table::fread("test_output/genome_quality_norm/selected_samples.csv")
-#gene_df <- data.table::fread("test_data/deeparg_df_format_mSpread.csv")
-#norm_gene_prev_df <- data.table::fread("test_output/genome_quality_norm/gene_prevalence_per_library.csv")
-
-#tax_level <- "Phylum"
-#out.path <- "test_output"
-
 #### Process initial load data ####
 
 selected_lib <- as.character(selected_lib$x)
@@ -82,7 +59,6 @@ gene_df <- gene_df %>%
 
 norm_gene_prev_df <- norm_gene_prev_df %>%
   filter(Library %in% selected_lib)
-
 
 
 ### PARTICULAR FILTERING -> REMOVE AFTER ! ###
@@ -245,9 +221,3 @@ for (t in target_classes) {
   
   
 }
-
-
-
-
-
-
