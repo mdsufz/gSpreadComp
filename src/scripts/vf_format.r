@@ -3,10 +3,10 @@
 #Format Victors or VFDB output for gSpreadComp
 
 #### Load libs and inputs
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
-library("tidyr")
+library("tidyr")})
 
 option_list = list(
   make_option(c("--vf"), type="character", default=NULL, 
