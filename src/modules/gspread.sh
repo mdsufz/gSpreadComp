@@ -163,3 +163,15 @@ Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/risk_analysis.r --mags_data $initial
  --out $out
 
 echo "Plasmid-HGT and Risk analysis finished!"
+
+### Report Generation ###
+
+echo "Report generation started!"
+out=`realpath $out`
+
+rmd_file_path=$mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gspread_report_generator.Rmd
+
+Rscript -e "rmarkdown::render('$rmd_file_path', output_file='$out/gSpread_risk_report.html', params=list(resource_path='$out', taxa='$spread_taxa', gene_col='$target_gene_col'))"
+
+
+echo "Report generation finished!"
