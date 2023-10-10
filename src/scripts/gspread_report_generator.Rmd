@@ -1,0 +1,227 @@
+---
+title: "gSpreadComp Genome Risk Assesment Report"
+output:
+   rmdformats::readthedown
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+params:
+  resource_path: null
+  taxa: "Phylum"
+  gene_col: "Gene_id"
+---
+
+
+```{r, include=FALSE}
+#setwd("~/pCloudDrive/Chapter3_DietMAGs/mspread_test_out")
+#setwd("P:/Chapter3_DietMAGs/mspread_test_out")
+#setwd("/Users/jonask/pCloud Drive/Chapter3_DietMAGs/mspread_test_out")
+library(dplyr)
+library(knitr)
+library(DT)
+library(rmdformats)
+
+#Path to the figures and tables (resources) that will be used in the report
+resource_path <- params$resource_path
+
+mags_summary <- read.csv(paste0(resource_path, "/mags_summary_results.csv"))
+genes_hgt <- read.csv(paste0(resource_path, "/hgt_events_results/all_hgt_found_gene.csv"))
+vf_hgt <- read.csv(paste0(resource_path, "/hgt_events_results/all_hgt_found_vf.csv"))
+
+taxa_level <- params$taxa
+target_gene <- params$gene_col
+
+htmltools::tagList(datatable(mags_summary))
+htmltools::tagList(datatable(genes_hgt))
+htmltools::tagList(datatable(vf_hgt))
+
+```
+
+## Number of Genomes per Sample
+```{r, results='asis', echo=FALSE}
+
+  cat('\n')
+  cat('<div style="text-align:center">')
+  cat(paste0("![](", resource_path, "/genome_quality_norm/after_nGenomes_violin_plot.pdf){height=550px width=100%}"))
+  cat('</div>')
+  cat('\n')
+  
+```
+
+## Genome Quality per Target {.tabset} 
+
+```{r, results='asis', echo=FALSE}
+tabs <- sort(unique(mags_summary$Target))
+
+for(tab in tabs) {
+
+  cat('\n')
+
+  cat('### ', tab, '   \n')
+
+  cat('\n')
+  cat('<div style="text-align:center">')
+  cat(paste0("![](", resource_path, "/genome_quality_norm/quality_scatter_", tab, "_plot.pdf){height=510px width=700px}"))
+  cat('</div>')
+  
+  cat('\n')
+  
+}
+```
+
+
+## Number of unique target gene per Genome {.tabset} 
+
+```{r, results='asis', echo=FALSE}
+tabs <- sort(unique(mags_summary$Target))
+
+for(tab in tabs) {
+
+  cat('\n')
+
+  cat('### ', tab, '   \n')
+
+  cat('\n')
+  cat('<div style="text-align:center">')
+  cat(paste0("![](", resource_path, "/genome_quality_norm/target_gene_per_genome_hist_", tab, "_plot.pdf){height=510px width=700px}"))
+  cat('</div>')
+  
+  cat('\n')
+  
+}
+```
+
+
+## Gene Prevalence per Target
+
+
+```{r, echo=FALSE}
+
+  gene_per_target_pair_comp <- read.csv(paste0(resource_path, "/gene_pairwise_comp_results/gene_per_target_pairwise_comp.csv"))
+
+datatable(gene_per_target_pair_comp %>%
+            select(!!sym(target_gene), group1, group2, n1, n2, p_adjusted, p.adj.signif) %>%
+            filter(p.adj.signif != "ns"),
+          options = list(scrollX = TRUE,
+                         scrollCollapse = TRUE,
+                         pageLength = 3))
+
+
+```
+
+```{r, results='asis', echo=FALSE}
+
+  cat('\n')
+  cat('<div style="text-align:center">')
+  cat(paste0("![](", resource_path, "/gene_pairwise_comp_results/box_plot_gene_prevalence_per_library.pdf){height=800px width=100%}"))
+  cat('</div>')
+  cat('\n')
+  
+```
+
+
+## Gene Spread {.tabset} 
+
+```{r, results='asis', echo=FALSE}
+tabs <- sort(unique(mags_summary$Target))
+
+for(tab in tabs) {
+
+  cat('\n')
+
+  cat('### ', tab, '   \n')
+
+  cat('\n')
+  cat('<div style="text-align:center; display:flex; flex-wrap:wrap; justify-content:center;">')
+
+  
+  cat('<div class="image" style="flex:1; padding:5px;">')
+cat(paste0("![](", resource_path, "/gene_spread_results/gOTUs_per_target_gene_barplot_", taxa_level,"_", tab, ".pdf){height=700px width=100%}"))
+  cat('</div>\n')
+
+  cat('<div class="image" style="flex:1; padding:5px;">')
+cat(paste0("![](", resource_path, "/gene_spread_results/prevalence_gene_", taxa_level,"_", tab, ".pdf){height=700px width=100%}"))
+  cat('</div>\n')
+  
+  cat('</div>')
+  
+  cat('\n')
+  
+}
+```
+
+
+
+
+## Genomes Summary per Target {.tabset} 
+
+```{r, results='asis', echo=FALSE}
+tabs <- sort(unique(mags_summary$Target))
+
+for(tab in tabs) {
+
+  cat('\n')
+
+  cat('### ', tab, '   \n')
+
+  cat('\n')
+  cat('<div style="text-align:center">')
+  
+  
+  print(htmltools::tagList(datatable(mags_summary %>%
+              filter(Target == tab), options = list(scrollX = TRUE,
+                                                    scrollCollapse = TRUE))))
+  
+  
+  cat('</div>')
+  
+  cat('\n')
+  
+}
+```
+
+## Plasmid-mediated HGT events {.tabset} 
+
+```{r, results='asis', echo=FALSE}
+tabs <- sort(unique(mags_summary$Target))
+subtabs <- c("Genes", "Virulence_Factors")
+
+for(tab in tabs) {
+  
+    cat('\n')
+  
+    cat('### ', tab, '{.tabset}' ,'   \n')
+  
+    cat('\n')
+  
+  for (subtab in subtabs) {
+
+    cat('\n')
+  
+    cat('#### ', subtab, '   \n')
+  
+    cat('\n')
+    cat('<div style="text-align:center">')
+    
+    if (subtab == "Genes") {
+      
+        print(htmltools::tagList(datatable(genes_hgt %>%
+                                             filter(Target == tab),
+                                           options = list(scrollX = TRUE,
+                                                          scrollCollapse = TRUE))))
+      
+    }else if (subtab == "Virulence_Factors") {
+      
+        print(htmltools::tagList(datatable(vf_hgt %>% 
+                                             filter(Target == tab),
+                                           options = list(scrollX = TRUE,
+                                                          scrollCollapse = TRUE))))
+      
+    }
+    
+    
+    cat('</div>')
+    
+    cat('\n')
+    
+  }
+}
+```
