@@ -3,10 +3,10 @@
 #Format DeepARG output for mSpreadComp
 
 #### Load libs and inputs
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
-library("tidyr")
+library("tidyr")})
 
 option_list = list(
   make_option(c("-i", "--input"), type="character", default=NULL, 
