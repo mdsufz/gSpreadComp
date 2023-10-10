@@ -1,10 +1,6 @@
 #!/usr/bin/env Rscript
 
-#Test path
-
-#setwd("//wsl.localhost/Ubuntu/home/kasmanas/mSpreadComp")
-
-#Select Samples based on number of MAGs recovered
+#Select Samples based on the number of MAGs recovered
 #Describe MAGs and Save figures
 
 #### Load libs and inputs
@@ -17,16 +13,10 @@ library("data.table")
 library("viridis")
 library("pheatmap")
 library("forcats")
-
-#library("patchwork")
-#library("gridExtra")
-#library("ggforce")
-#library(stringr)
-
-#Set Default parameters
-#target_gene <- "Gene_id"
-target_gene <- "Gene_class"
-tax_level <- "Phylum"
+library(rstatix)
+library(tidyverse)
+library(purrr)
+library(progress)
 
 
 option_list = list(
@@ -43,7 +33,7 @@ option_list = list(
   make_option(c("--target_gene_col"), type="character", default=NULL, 
               help="Name of the Target Gene column to perform the pairwise comparisons [default: Gene_id]", metavar="character"),
   make_option(c("-o", "--out"), type="character",
-              help="output directory path to save formated files", metavar="character")
+              help="output directory path to save formatted files", metavar="character")
 ); 
 
 opt_parser = OptionParser(option_list=option_list)
@@ -56,15 +46,6 @@ gene_df <- data.table::fread(opt$gene)
 norm_gene_prev_df <- data.table::fread(opt$norm_gene_prev)
 tax_level <- opt$spread_taxa
 target_gene <- opt$target_gene_col
-
-
-#### TEST INPUT ####
-
-#mags_data_df <- data.table::fread("test_output/03_mspread_analysis_gene_class_out/genome_quality_norm/genome_data_merged.csv")
-#selected_lib <- data.table::fread("test_output/03_mspread_analysis_gene_class_out/genome_quality_norm/selected_samples.csv")
-#gene_df <- data.table::fread("test_data/deeparg_df_format_mSpread.csv")
-#norm_gene_prev_df <- data.table::fread("test_output/03_mspread_analysis_gene_class_out/genome_quality_norm/gene_prevalence_per_library.csv")
-#out.path <- "test_output"
 
 #### Process initial load data ####
 
@@ -95,10 +76,10 @@ target_gene_sum_prev <- norm_gene_prev_df %>%
 
 ### PARTICULAR FILTERING -> REMOVE AFTER ! ###
 
-# only consider ARGs with 35% or higher percent identity
+# Only consider ARGs with 35% or higher percent identity
 gene_df <- gene_df[gene_df$identity >= 35, ]
 
-# load best bins to assign taxonomy to clusters
+# Load best bins to assign taxonomy to clusters
 target_classes <- sort(c(unique(gene_df$Target)))
 
 
@@ -127,8 +108,102 @@ dev.off()
 
 
 #####
+#Create a function to remove special char
+sanitize_string <- function(string) {
+  # Use gsub to replace non-alphanumeric characters (excluding spaces) with an empty string
+  sanitized <- gsub("[^[:alnum:][:space:]]", "", string)
+  return(sanitized)
+}
 
-#### Perform Pairwise analyses
+########## Speedup function ####
+perform_t_tests <- function(df, target_gene) {
+  
+  compute_pairwise <- function(gene_class, sub_df, pb) {
+    targets <- unique(sub_df$Target)
+    
+    if (length(targets) < 2) {
+      pb$tick(length(targets))
+      map_df(targets, ~ setNames(data.frame(
+        gene_class = gene_class,
+        .y. = NA,
+        group1 = NA,
+        group2 = NA,
+        n1 = NA,
+        n2 = NA,
+        statistic = NA,
+        df = NA,
+        p = NA,
+        notes = paste("Not enough groups for comparison within this", target_gene)
+      ), c(target_gene, ".y.", "group1", "group2", "n1", "n2", "statistic", "df", "p", "notes")))
+    } else {
+      pb$tick(choose(length(targets), 2))
+      combn(targets, 2, simplify = FALSE) %>%
+        map_df(~ {
+          data_pair <- sub_df %>% filter(Target %in% .x)
+          data_pair$Target <- droplevels(data_pair$Target)
+          
+          if (all(table(data_pair$Target) >= 2)) {
+            data_pair %>%
+              group_by(!!sym(target_gene)) %>%
+              rstatix::t_test(
+                gene.genome.prev ~ Target, 
+                p.adjust.method = "bonferroni"
+              ) %>%
+              mutate(notes = NA)
+          } else {
+            setNames(data.frame(
+              gene_class = gene_class,
+              .y. = NA,
+              group1 = .x[1],
+              group2 = .x[2],
+              n1 = NA,
+              n2 = NA,
+              statistic = NA,
+              df = NA,
+              p = NA,
+              notes = "Not enough observations in each group for comparison"
+            ), c(target_gene, ".y.", "group1", "group2", "n1", "n2", "statistic", "df", "p", "notes"))
+          }
+        })
+    }
+  }
+  
+  # Calculate total steps for the progress bar
+  total_steps <- df %>%
+    group_by(!!sym(target_gene)) %>%
+    summarise(n_combinations = sum(ifelse(n_distinct(Target) < 2, n_distinct(Target), choose(n_distinct(Target), 2)))) %>%
+    pull(n_combinations) %>%
+    sum()
+  
+  # Create a progress bar
+  pb <- progress_bar$new(
+    format = "[:bar] :percent Elapsed: :elapsed",
+    total = total_steps,
+    width = 60
+  )
+  
+  results_df <- df %>%
+    group_by(!!sym(target_gene)) %>%
+    group_map(~ compute_pairwise(.x[[target_gene]][1], .x, pb), .keep = TRUE) %>%
+    bind_rows()
+  
+  results_df$p_adjusted <- p.adjust(results_df$p, method = "bonferroni")
+  
+  results_df <- results_df %>%
+    mutate(
+      p.adj.signif = case_when(
+        is.na(p_adjusted) ~ NA_character_,
+        p_adjusted < 0.001 ~ '***',
+        p_adjusted >= 0.001 & p_adjusted < 0.01 ~ '**',
+        p_adjusted >= 0.01 & p_adjusted < 0.05 ~ '*',
+        p_adjusted >= 0.05 & p_adjusted < 0.1 ~ '.',
+        p_adjusted >= 0.1 ~ 'ns'
+      )
+    )
+  
+  return(results_df)
+}
+
 dat <- norm_gene_prev_df
 
 dat <- dat %>% 
@@ -144,30 +219,12 @@ mean_gene_target <- dat %>%
   ) %>%
   ungroup()
 
-#Do the test
+# Reorder the levels of the Target factor based on alphabetical order
+dat$Target <- factor(dat$Target, levels = sort(unique(dat$Target)))
 
-stat.test <- dat %>%
-  group_by(across(all_of(target_gene))) %>%
-  rstatix::t_test(gene.genome.prev ~ Target, p.adjust.method = "bonferroni")
+results_df <- perform_t_tests(dat, target_gene)
 
-# Remove unnecessary columns and display the outputs
-stat.test.select <- stat.test %>%
-  select(-.y., -statistic, -df) %>%
-  filter(!(p.adj.signif == "ns"))
-
-# Create the plot
-# myplot <- ggpubr::ggboxplot(
-#   dat, x = "Target", y = "gene.genome.prev",
-#   fill = "Target", palette = "npg", legend = "none"
-# ) +
-#   facet_wrap(~get(target_gene))
-
-# # Add statistical test p-values
-stat.test.select <- stat.test.select %>% rstatix::add_xy_position(x = "Target")
-# myplot + ggpubr::stat_pvalue_manual(stat.test, label = "p.adj.signif")
-
-#Create individual plots
-#palette = c("#F8766D","#A3A500","#00BF7D","#00B0F6","#E76BF3")
+#### Create Graphs ####
 
 graphs <- dat %>%
   group_by(across(all_of(target_gene))) %>%
@@ -178,48 +235,65 @@ graphs <- dat %>%
     ), 
     result = "plots"
   )
-#graphs
 
-variables <- as.character(as.data.frame(graphs)[, target_gene])
-plots <- graphs$plots %>% purrr::set_names(variables)
-for(variable in variables){
+######
+# Identify all unique target groups
+all_targets <- sort(unique(dat$Target))
+
+# Generate a consistent color palette for all target groups
+color_palette <- scales::hue_pal()(length(all_targets))
+names(color_palette) <- all_targets
+
+# Annotate the plots using the provided significance levels in results_df
+graphs$plots <- map2(graphs$plots, graphs[[target_gene]], function(p, current_gene_class_value) {
   
-  stat.test.i <- filter(stat.test.select, get(target_gene) == variable) 
-  graph.i <- plots[[variable]] + 
-    labs(title = variable) +
-    ggpubr::stat_pvalue_manual(stat.test.i, label = "p.adj.signif")
+  # 1. Extract Relevant Annotations
+  annotations_for_this_gene_class <- results_df %>% 
+    filter(!!sym(target_gene) == current_gene_class_value) %>% 
+    select(group1, group2, p.adj.signif)
   
-  pdf(file = paste0(out.path,"/pairwise_per_gene_boxplots/boxplot_gene_prev_per_library_", variable, ".pdf"),
-      width = 12, height = 8)
+  # Initialize a base y-position
+  base_y_position <- max(p$data$gene.genome.prev, na.rm=TRUE) + 0.05
   
-  print(graph.i)
+  # 2. Iterate Over Each Annotation
+  for (i in 1:nrow(annotations_for_this_gene_class)) {
+    ann <- annotations_for_this_gene_class[i, ]
+    
+    # Skip "ns" annotations or NA values
+    if (is.na(ann$p.adj.signif) || ann$p.adj.signif == "ns") {
+      next
+    }
+    
+    # 3. Add Annotations to the Plot
+    p <- p + geom_signif(
+      comparisons = list(c(ann$group1, ann$group2)), 
+      test = NULL, 
+      annotations = ann$p.adj.signif, 
+      y_position = base_y_position  # Use the current base y-position
+    )
+    
+    # Increment the base y-position for the next annotation
+    base_y_position <- base_y_position + 0.05
+  }
   
+  # Use a consistent color palette and add the title
+  p <- p + 
+    scale_fill_manual(values = color_palette) + 
+    ggtitle(current_gene_class_value)
+  
+  pdf_file_path <- paste0(out.path, "/pairwise_per_gene_boxplots/boxplot_gene_prev_per_library_", 
+                          sanitize_string(current_gene_class_value), ".pdf")
+  pdf(file = pdf_file_path, width = 12, height = 8)
+  print(p)
   dev.off()
-}
-
+  
+  return(p)
+})
 
 #Save Tables to file
 
 ##Mean and SD of Target gene prev per Target metadata
 write.csv(x = mean_gene_target, file = paste0(out.path, "/gene_prev_mean_per_target.csv"), row.names = F)
 
-
 ##t-test analysis of all pairwise comparisons
-write.csv(x = stat.test, file = paste0(out.path, "/gene_per_target_pairwise_comp.csv"), row.names = F)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+write.csv(x = results_df, file = paste0(out.path, "/gene_per_target_pairwise_comp.csv"), row.names = F)
