@@ -1,13 +1,13 @@
 source installation/config
 
 #### DESCRIPTION #### 
-## Call a given installation script from the instalation script path
+## Call a given installation script from the installation script path
 ##
 #### PARAMS ####
 ## $1 the script name
 ##
 #### OUTPUT #### 
-## The bash command output to the given script passed as a parameter
+## The bash command output to the given script is passed as a parameter
 call_installation_script() {
     command="$1"
     for i; do
@@ -16,7 +16,7 @@ call_installation_script() {
 }
 
 #### DESCRIPTION #### 
-## Create a environment to mudoger and the paths that will be used
+## Create an environment to mudoger and the paths that will be used
 ## to store it's dependencies
 ##
 #### OUTPUT #### 
@@ -24,6 +24,7 @@ call_installation_script() {
 start_pre_configuration() {
 
     conda create -y -n gspreadcomp_env r-essentials r-base gzip
+    mamba env update --name $mSPREAD_CONDA_ENVIRONMENT_PATH --file $DEPENDENCIES_SCRIPTS_PATH/gspreadcomp_req.yml
     conda activate gspreadcomp_env
     conda install -c conda-forge glpk
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
