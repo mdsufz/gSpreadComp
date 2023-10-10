@@ -7,10 +7,10 @@
 
 #Expect input for the same genomes:
 #GTDB-tk
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
-library("tidyr")
+library("tidyr")})
 
 option_list = list(
   make_option(c("--gtdb"), type="character", default=NULL, 
