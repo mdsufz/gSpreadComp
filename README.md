@@ -83,7 +83,7 @@ $ echo $CONDA_PREFIX
 $ bash -i installation/install.sh
 
 # Follow the instructions on the screen:
-# Enter "y" if you want to install all modules, otherwise enter "n".
+# Enter "y" if you want to install all modules; otherwise, enter "n".
 # If you entered "n", enter "y" for each of the modules you would like to install individually.
 
 	The MuDoGeR's installation will begin..
@@ -114,7 +114,7 @@ Use this script if you want gSpreadComp to take care of everything.
 
 ```console
 # Make sure gSpreadComp_env is activated. It should have been created when you ran 'bash -i installation/install.sh'
-$ conda activate gSpreadComp_env
+$ conda activate gspreadcomp_env
 
 # Go to gSpreadComp cloned directory
 $ cd gSpreadComp
