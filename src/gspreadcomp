@@ -71,7 +71,7 @@ elif [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 	help_message
 elif [ "$1" = "-v" ] || [ "$1" = "--version" ]; then
 	echo ""
-	echo gSpreadcomp v=$VERSION"
+	echo "gSpreadcomp v=$VERSION"
 	echo ""
 elif [ "$1" = "--show-config" ]; then
 	echo "gspreadcomp script found in $(which gspreadcomp) and config file was found in $(which config)."
