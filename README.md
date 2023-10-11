@@ -16,7 +16,7 @@
 ### Comprehensive Workflow
 `gSpreadComp` amalgamates genome annotation, normalization, and sequence comparison in a unified approach, systematically quantifying gene spread and integrating plasmid-mediated gene transfer annotation with the whole microbiome community in a genome-reference independent manner and furnishing a sophisticated QMRA metric.
 
-![ScreenShot](https://github.com/JotaKas/gSpreadComp/blob/main/test_data/01_Kasmanas_gSpread_Fig_1.png)
+![ScreenShot](/test_data/01_Kasmanas_gSpread_Fig_1.png)
 
 # Requirements
 
