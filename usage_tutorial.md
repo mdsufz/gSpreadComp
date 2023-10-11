@@ -312,3 +312,50 @@ After running the Pathogens Module, you will find the output in the specified ou
 The `vfdb_format_gSpread.csv.csv` and `victors_format_gSpread.csv.csv` files contain virulence factors results for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. These files are crucial for downstream analysis and should be retained.
 
 
+## gSpread Module: Main Analysis and Downstream Processing
+
+The `gspread` module is the final step in the `gSpreadComp` pipeline, integrating the outputs from the previous modules to perform a comprehensive analysis of gene spread, plasmid-mediated horizontal gene transfer, virulence factors, and more.
+
+### Usage:
+
+To view the available options for the `gspread` module, use the following command:
+
+```bash
+gspreadcomp gspread --help
+```
+
+This will display the available parameters and their descriptions.
+
+### Running the Module:
+
+If you've followed our tutorial steps sequentially, you should have the required inputs ready for the `gspread` module. Here's how to execute the module with the processed outputs:
+
+```bash
+gspreadcomp gspread --gtdbtk ./03_gspread_gtdb_taxonomy/gtdb_df_format_gSpread.csv  --checkm ./04_gspread_checkm_quality/checkm_df_format_gSpread.csv --gene ./05_gspread_deeparg_args/deeparg_df_combined_gSpreadformat.csv --meta ./02_metadata_gspread_sample.csv --plasmid ./06_gspread_plasmids/plasflow_output_combined.csv --vf ./07_gspread_pathogens/victors_ann_format.csv -t 25 -o ./08_gspread_results/ --target_gene_col Gene_id
+```
+
+### Inspecting the Output of the gSpread Module
+
+After running the command, the `gspread` module will produce several output files in the specified output directory (`./08_gspread_results/` in our example):
+
+```
+08_gspread_results/
+├── common_tax_target.csv
+├── gSpread_risk_report.html
+├── gene_pairwise_comp_results
+├── gene_spread_results
+├── genome_quality_norm
+├── hgt_events_results
+├── mags_complete_annotation.csv
+├── mags_summary_results.csv
+├── network_vis_files
+└── pathogens_results
+```
+
+Among these, the `gSpread_risk_report.html` provides a comprehensive report on the risk assessment, while other files and directories contain detailed results from various analyses performed by the module.
+
+Several of the generated files are used in the report. However, a detailed inspection of all the outputs may also help the user.
+
+The main files are the mags_complete_annotation.csv and the mags_summary_results.csv, which contain a result compilation and a risk metric for every given genome.
+
+MORE DETAILS ARE COMING!
