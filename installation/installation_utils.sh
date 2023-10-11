@@ -24,9 +24,13 @@ call_installation_script() {
 start_pre_configuration() {
 
     conda create -y -n gspreadcomp_env r-essentials r-base gzip
-    mamba env update --name $mSPREAD_CONDA_ENVIRONMENT_PATH --file $DEPENDENCIES_SCRIPTS_PATH/gspreadcomp_req.yml
     conda activate gspreadcomp_env
-    mamba install -y -c conda-forge glpk r-optparse
+    mamba install -y -c conda-forge glpk r-optparse r-viridis r-ggpubr r-rmdformats r-devtools r-patchwork r-ggforce r:r-dt bioconda:r-pheatmap
+    R -e "install.packages(c('Rglpk', 'glpkAPI', 'combinat', 'triangle'), dependencies=TRUE, repos='https://cloud.r-project.org/')"
+    R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/MCDA/MCDA_0.0.24.tar.gz', repos=NULL, type='source')"
+    mamba env update --file $DEPENDENCIES_SCRIPTS_PATH/gspreadcomp_req.yml
+    R -e "install.packages('xfun', repos='https://cloud.r-project.org/')"
+    R -e "install.packages('rmarkdown', repos='https://cloud.r-project.org/')"
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda
     mkdir -p $mSPREAD_CONDA_ENVIRONMENT_PATH/dependencies/conda/envs
