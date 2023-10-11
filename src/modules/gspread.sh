@@ -80,7 +80,7 @@ out=`realpath $out`
 initial_processing_path=$out/genome_quality_norm
 mkdir $initial_processing_path
 
-Rscript $gspread_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk \
+Rscript $mSPREAD_CONDA_ENVIRONMENT_PATH/bin/simple_description_norm.r --gtdb $gtdbtk \
  --checkm $checkm \
  --gene $gene \
  --meta $meta \
