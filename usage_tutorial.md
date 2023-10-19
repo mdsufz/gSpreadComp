@@ -2,9 +2,11 @@
 
 Welcome to the `gSpreadComp` usage tutorial! This guide is designed to help you understand how to use the tool effectively through practical examples and step-by-step instructions.
 
+You can use genomes of your own, but if you need some genomes for testing, you can use the one [here](https://e.pcloud.link/publink/show?code=kZoUHsZq72qCkzuJmunUnT0JIdVTkqghAGV).
+
 ## Introduction
 
-`gSpreadComp` is designed to work with genomes in fasta format and requires a metadata table in CSV format containing a target variable. For example tables and more details, please refer to [example_metadata_table_link] and [example_genome_fasta_link]. For the recovery of prokaryotic genomes from metagenomic samples, you can use tools like [MuDoGeR](https://github.com/mdsufz/MuDoGeR).
+`gSpreadComp` is designed to work with genomes in fasta format and requires a metadata table in CSV format containing a target variable. For example tables and more details, please refer to [example_metadata_table_link] and [example_genome_fasta_link]. To recover prokaryotic genomes from metagenomic samples, you can use tools like [MuDoGeR](https://github.com/mdsufz/MuDoGeR).
 
 ### Prerequisites
 
