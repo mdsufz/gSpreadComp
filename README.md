@@ -1,13 +1,15 @@
-## gSpreadComp: Prokaryotic Quantitative Risk Assessment Pipeline
+## gSpreadComp: Prokaryotic Quantitative Risk Assessment, gene spread and plasmid-mediated HGT
 
 ### Description
 `gSpreadComp` is a UNIX-based, modular bioinformatics tool designed for prokaryotic quantitative risk assessment, gene spread analysis, and evaluation of plasmid-mediated horizontal transmission to pathogens within microbial communities. It was designed to use sequence data to enhance the traditional quantitative microbial risk assessment (QMRA) models by offering more detailed and integrated analyses of microbial communities in the metagenomic era.
 
+After installation, the user may want to check a detailed tutorial with example input and output data [here](usage_tutorial.md)
+
 ### Objectives and Features
 - **Six Integrated Modules**: Offers modules for taxonomy assignment, genome quality estimation, ARG annotation, plasmid/chromosome classification, virulence factor annotation, and in-depth downstream analysis, including target-based gene spread analysis and prokaryotic risk assessment.
 - **Weighted Average Prevalence (WAP)**: Employs WAP for calculating the spread of target genes at different taxonomical levels or target groups, enabling refined analyses and interpretations of microbial communities.
-- **Pathogenic Risk Assessment**: Utilizes the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) for quantifying pathogenic risk, considering target genes, virulence, and plasmid transmissibility potential.
 - **Reference Pathogen Identification**: Compares genomes to the NCBI pathogens database to identify reference pathogens and to determine the pathogenic risk factors.
+- **Pathogenic Risk Assessment**: Utilizes the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) for quantifying pathogenic risk, considering target genes, virulence, and plasmid transmissibility potential.
 - **HTML Reporting**: Culminates in a structured HTML report after the complete downstream analysis, providing users with an overview of the results.
 
 ### Modular Approach and Flexibility
@@ -160,7 +162,7 @@ gspreadcomp --help
 ```sh
 gspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir
 ```
-- Assigns taxonomy to genomes using GTDBtk v2.
+- Assigns taxonomy to genomes using [GTDBtk v2](https://academic.oup.com/bioinformatics/article/38/23/5315/6758240).
 - Options:
   - `--genome_dir STR`: folder with the bins to be classified (in fasta format)
   - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
@@ -171,7 +173,7 @@ gspreadcomp taxonomy [options] --genome_dir genome_folder -o output_dir
 ```sh
 gspreadcomp quality [options] --genome_dir genome_folder -o output_dir
 ```
-- Estimates genome completeness and contamination using CheckM.
+- Estimates genome completeness and contamination using [CheckM](https://genome.cshlp.org/content/25/7/1043).
 - Options:
   - `--genome_dir STR`: folder with the genomes to estimate quality (in fasta format)
   - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
@@ -183,7 +185,7 @@ gspreadcomp quality [options] --genome_dir genome_folder -o output_dir
 ```sh
 gspreadcomp args [options] --genome_dir genome_folder -o output_dir
 ```
-- Predicts the Antimicrobial Resistance Genes (ARGs) in a genome using DeepARG.
+- Predicts the Antimicrobial Resistance Genes (ARGs) in a genome using [DeepARG](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-018-0401-z).
 - Options:
   - `--genome_dir STR`: folder with the genomes to be classified (in fasta format)
   - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
@@ -199,7 +201,7 @@ gspreadcomp args [options] --genome_dir genome_folder -o output_dir
 ```sh
 gspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
 ```
-- Predicts if a sequence within a fasta file is a chromosome, plasmid, or undetermined using Plasflow.
+- Predicts if a sequence within a fasta file is a chromosome, plasmid, or undetermined using [Plasflow](https://academic.oup.com/nar/article/46/6/e35/4807335).
 - Options:
   - `--genome_dir STR`: folder with the genomes to be classified (in fasta format)
   - `--extension STR`: fasta file extension (e.g. fa or fasta) [default: fa]
@@ -224,7 +226,7 @@ gspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
 ```sh
 gspreadcomp gspread [options] -o output_dir
 ```
-- Runs the main `gspreadComp` to compare spread and plasmid-mediated HGT.
+- Runs the main `gSpreadComp` to compare spread and plasmid-mediated HGT.
 - Options:
   - `--checkm STR`: Path to the formatted Quality estimation dataframe
   - `--gene STR`: Path to the formatted target Gene dataframe to calculate the spread
