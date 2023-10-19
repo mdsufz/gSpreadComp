@@ -6,13 +6,13 @@ You can use genomes of your own, but if you need some genomes for testing, you c
 
 ## Introduction
 
-`gSpreadComp` is designed to work with genomes in fasta format and requires a metadata table in CSV format containing a target variable. For example tables and more details, please refer to [example_metadata_table_link] and [example_genome_fasta_link]. To recover prokaryotic genomes from metagenomic samples, you can use tools like [MuDoGeR](https://github.com/mdsufz/MuDoGeR).
+`gSpreadComp` is designed to work with genomes in fasta format and requires a metadata table in CSV format containing a target variable. For example tables, please refer to [example_metadata_table_link](test_data/02_metadata_gspread_sample.csv) and [example_genome_fasta_link](https://e.pcloud.link/publink/show?code=kZoUHsZq72qCkzuJmunUnT0JIdVTkqghAGV). To recover prokaryotic genomes from metagenomic samples, you can use tools like [MuDoGeR](https://github.com/mdsufz/MuDoGeR).
 
 ### Prerequisites
 
 Before proceeding with the tutorial, make sure you have:
 1. Genomes in fasta format.
-2. A metadata table in CSV format with a target variable.
+2. A metadata table in CSV format with a target variable. Your metadata table must be formatted correctly, i.e., including a column named "Library" to identify the source sample, a column named "Genome" to identify the genome, and a column named "Target" to identify your target variable. Refer to example [here](test_data/02_metadata_gspread_sample.csv)
 
 ### Modules and Steps
 
@@ -30,7 +30,7 @@ Let's get started!
 
 ## Taxonomy Assignment Module
 
-The taxonomy module in `gSpreadComp` uses GTDBtk for taxonomy assignment. To run this module, use the `gspreadcomp taxonomy` command. Below are the available options for this module:
+The taxonomy module in `gSpreadComp` uses [GTDBtk](https://academic.oup.com/bioinformatics/article/38/23/5315/6758240) for taxonomy assignment. To run this module, use the `gspreadcomp taxonomy` command. Below are the available options for this module:
 
 ```console
 gspreadcomp taxonomy --help
@@ -73,13 +73,15 @@ After running the Taxonomy Module, you will find the output in the specified out
 
 #### Main Output File: gtdb_df_format_gSpread.csv. Understanding the Output
 
+The user can find an example of the expected gtdb_df_format_gSpread.csv [here](test_data/gtdb_df_format_gSpread.csv).
+
 The `gtdb_df_format_gSpread.csv` file contains taxonomy information for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. This file is crucial for the downstream analysis and should be retained.
 The **gtdbtk_result.tsv**: This file consolidates the results from GTDBtk, providing comprehensive information on taxonomy assignments in the GTDBtk format.
 For a detailed description of the other files, the user can go to the [**GTDB-tk**](https://academic.oup.com/bioinformatics/article/38/23/5315/6758240) page.
 
 ### Genome Quality Estimation using CheckM
 
-The quality module in `gSpreadComp` uses CheckM to estimate the quality of genomes. To run this module, use the `gspreadcomp quality` command. Below are the available options for this module:
+The quality module in `gSpreadComp` uses [CheckM](https://genome.cshlp.org/content/25/7/1043) to estimate the quality of prokaryotic genomes. To run this module, use the `gspreadcomp quality` command. Below are the available options for this module:
 
 ```console
 gspreadcomp quality --help
@@ -98,7 +100,7 @@ Options:
 2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
 3. Create an output folder within the test run folder, for example, `04_gspread_checkm_quality`.
 
-Assuming you have placed your genomes in `01_input_genomes` and your output folder is `04_gspread_checkm_quality`, your command will look like:
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `04_gspread_checkm_quality`, your command will look like this:
 
 ```console
 $ gspreadcomp quality --genome_dir ./01_input_genomes/ --extension fa -o ./04_gspread_checkm_quality/ -t 25
@@ -122,6 +124,8 @@ After running the Quality Module, you will find the output in the specified outp
 
 #### Main Output File: checkm_df_format_gSpread.csv. Understanding the Output
 
+The user can find an example of the expected checkm_df_format_gSpread.csv [here](test_data/checkm_df_format_gSpread.csv).
+
 The `checkm_df_format_gSpread.csv` file contains quality information for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. This file is crucial for the downstream analysis and should be retained.
 The **outputcheckm.tsv** is the main output file from CheckM itself, consolidating the results and providing comprehensive information on genome quality.
 
@@ -129,7 +133,7 @@ For a detailed description of the other files, the user can go to the [**CheckM*
 
 ### ARGs Annotation using DeepARG
 
-The ARGs module in `gSpreadComp` uses DeepARG to predict the Antimicrobial Resistance Genes (ARGs) in a genome. To run this module, use the `gspreadcomp args` command. Below are the available options for this module:
+The ARGs module in `gSpreadComp` uses [DeepARG](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-018-0401-z) to predict the Antimicrobial Resistance Genes (ARGs) in a genome. To run this module, use the `gspreadcomp args` command. Below are the available options for this module:
 
 ```console
 gspreadcomp args --help
@@ -152,7 +156,7 @@ Options:
 2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
 3. Create an output folder within the test run folder, for example, `05_gspread_deeparg_args`.
 
-Assuming you have placed your genomes in `01_input_genomes` and your output folder is `05_gspread_deeparg_args`, your command will look like:
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `05_gspread_deeparg_args`, your command will look like this:
 
 ```console
 $ gspreadcomp args --genome_dir ./01_input_genomes/ --extension fa -o ./05_gspread_deeparg_args/
@@ -183,6 +187,8 @@ After running the ARGs Module, you will find the output in the specified output 
 
 #### Understanding the Output Files and Directories
 
+The user can find an example of the expected deeparg_df_format_gSpread.csv [here](test_data/deeparg_df_format_gSpread.csv).
+
 1. **deeparg_df_format_gSpread.csv**: This is the format-ready main output file, containing formatted ARGs annotation information per genome. It's ready for integration into subsequent `gSpreadComp` modules.
 2. **deeparg_df_combined_raw.csv**: This file combines the raw output from DeepARG for all genomes analyzed.
 3. **genome_name.fa Directories**: For each genome analyzed, a separate directory is created, named after the genome. To get a detailed description of its content, the user can read the [DeepARG](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-018-0401-z) documentation
@@ -190,7 +196,7 @@ After running the ARGs Module, you will find the output in the specified output 
 
 ### Plasmid Identification using PlasFlow
 
-The Plasmid module in `gSpreadComp` uses PlasFlow to predict if a sequence within a fasta file is a chromosome, plasmid, or undetermined. To run this module, use the `gspreadcomp plasmid` command. Below are the available options for this module:
+The Plasmid module in `gSpreadComp` uses [PlasFlow](https://academic.oup.com/nar/article/46/6/e35/4807335) to predict if a sequence within a fasta file is a chromosome, plasmid, or undetermined. To run this module, use the `gspreadcomp plasmid` command. Below are the available options for this module:
 
 ```console
 gspreadcomp plasmid --help
@@ -239,6 +245,8 @@ After running the Plasmid Module, you will find the output in the specified outp
 
 #### Understanding the Output Files and Directories
 
+The user can find an example of the expected plasflow_combined_format_gSpread.csv [here](test_data/plasflow_combined_format_gSpread.csv).
+
 1. **genome_name.fa Directories**: For each genome analyzed, a separate directory is created, named after the genome. It contains the following files:
    - **genome_name.fa_plasflow_out.tsv**: This file contains the PlasFlow results in tab-separated values format.
    - **genome_name.fa_plasflow_out.tsv_chromosomes.fasta**: This file contains sequences predicted to be chromosomes.
@@ -251,7 +259,10 @@ After running the Plasmid Module, you will find the output in the specified outp
 
 ### Pathogens Annotation using Virulence Factors Databases
 
-The Pathogens module in `gSpreadComp` aligns the provided genomes against selected Virulence Factors databases and formats the output. To run this module, use the `gspreadcomp pathogens` command. Below are the available options for this module:
+The Pathogens module in `gSpreadComp` aligns the provided genomes against selected Virulence Factors databases and formats the output. 
+The pathogens module essentially uses BLAST to align your genomes with defined Virulence Factors databases. Here, the user can find the [Victors](https://academic.oup.com/nar/article/47/D1/D693/5144967?) database and the [VFDB](https://academic.oup.com/nar/article/50/D1/D912/6446532) database.
+
+To run this module, use the `gspreadcomp pathogens` command. Below are the available options for this module:
 
 ```console
 gspreadcomp pathogens --help
@@ -272,7 +283,7 @@ Options:
 2. Place your genomes in the `01_input_genomes` subfolder within the test run folder.
 3. Create an output folder within the test run folder, for example, `07_gspread_pathogens`.
 
-Assuming you have placed your genomes in `01_input_genomes` and your output folder is `07_gspread_pathogens`, your command will look like:
+Assuming you have placed your genomes in `01_input_genomes` and your output folder is `07_gspread_pathogens`, your command will look like this:
 
 ```console
 $ gspreadcomp pathogens --genome_dir ./01_input_genomes/ --extension fa -o ./07_gspread_pathogens/ --vf both -t 25
@@ -292,11 +303,11 @@ After running the Pathogens Module, you will find the output in the specified ou
 ├── genome_name_2.fa
 │   ├── vfdb_genome_name_2.out
 │   └── victors_genome_name_2.out
-├── vfdb_format_gSpread.csv.csv
+├── vfdb_format_gSpread.csv
 ├── vfdb_headers.txt
 ├── vfdb_merged.out
 ├── vfdb_per_genome_unique_count.csv
-├── victors_format_gSpread.csv.csv
+├── victors_format_gSpread.csv
 ├── victors_db_headers.txt
 ├── victors_merged.out
 └── victors_per_genome_unique_count.csv
@@ -304,19 +315,28 @@ After running the Pathogens Module, you will find the output in the specified ou
 
 #### Understanding the Output Files and Directories
 
-1. **vfdb_format_gSpread.csv.csv & victors_format_gSpread.csv.csv**: These are the format-ready main output files, containing formatted virulence factors results per genome. They're ready for integration into subsequent `gSpreadComp` modules.
+The user can find an example of the expected victors_format_gSpread.csv [here](test_data/victors_format_gSpread.csv). An equivalent output is generated if the user uses the VFDB instead of Victors database.
+
+1. **vfdb_format_gSpread.csv & victors_format_gSpread.csv**: These are the format-ready main output files containing formatted virulence factors results per genome. They're ready for integration into subsequent `gSpreadComp` modules.
 2. **vfdb_headers.txt & victors_db_headers.txt**: These files contain the headers for the VFDB and Victors databases respectively.
-3. **vfdb_merged.out & victors_merged.out**: These files contain the merged results of the alignments against the VFDB and Victors databases respectively.
+3. **vfdb_merged.out & victors_merged.out**: These files contain the merged results of the alignments against the VFDB and Victors databases, respectively.
 4. **vfdb_per_genome_unique_count.csv & victors_per_genome_unique_count.csv**: These files contain the count of unique virulence factors per genome for the VFDB and Victors databases respectively.
 
 #### Main Output Files: vfdb_format_gSpread.csv.csv & victors_format_gSpread.csv.csv
 
 The `vfdb_format_gSpread.csv.csv` and `victors_format_gSpread.csv.csv` files contain virulence factors results for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. These files are crucial for downstream analysis and should be retained.
 
+## Using custom files not generated with gSpreadComp
+
+If the user wants to generate custom, quality, taxonomy, gene annotation, plasmid identification, or Virulence Factors annotation files outside gSpreadComp, it is important to maintain the table formatting. 
+
+All the examples of input tables used by the gSpread module are [here](test_data).
+
+ **Most important is to keep the column naming as seen in the example tables.**
 
 ## gSpread Module: Main Analysis and Downstream Processing
 
-The `gspread` module is the final step in the `gSpreadComp` pipeline, integrating the outputs from the previous modules to perform a comprehensive analysis of gene spread, plasmid-mediated horizontal gene transfer, virulence factors, and more.
+The `gspread` module is the final step in the `gSpreadComp` pipeline, integrating the previous modules' outputs to comprehensively analyze gene spread, plasmid-mediated horizontal gene transfer, and pathogenic risk.
 
 ### Usage:
 
