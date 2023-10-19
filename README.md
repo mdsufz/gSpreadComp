@@ -1,5 +1,8 @@
-## gSpreadComp: Prokaryotic Quantitative Risk Assessment, gene spread and plasmid-mediated HGT
-![ScreenShot](/gspreadcomp_logo.png)
+## gSpreadComp: Prokaryotic Quantitative Risk Assessment, gene spread, and plasmid-mediated HGT
+
+<p align="center" width="100%">
+	<img width="30%" src="/gspreadcomp_logo_noback.png">
+</p>
 
 ### Description
 `gSpreadComp` is a UNIX-based, modular bioinformatics tool designed for prokaryotic quantitative risk assessment, gene spread analysis, and evaluation of plasmid-mediated horizontal transmission to pathogens within microbial communities. It was designed to use sequence data to enhance the traditional quantitative microbial risk assessment (QMRA) models by offering more detailed and integrated analyses of microbial communities in the metagenomic era.
