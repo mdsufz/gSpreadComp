@@ -1,8 +1,0 @@
-"Phylum","group1","group2","n1","n2","p","p.adj","p.adj.signif","y.position","xmin","xmax"
-"Bacteroidota","Ancient","Ketogenic",14,149,0.000266,0.003,"**",751.6,1,2
-"Bacteroidota","Ketogenic","Omnivore",149,394,2.65e-08,2.65e-07,"****",1287.6,2,3
-"Bacteroidota","Ketogenic","Vegan",149,43,0.001,0.01,"*",1421.6,2,4
-"Bacteroidota","Ketogenic","Vegetarian",149,118,1.57e-12,1.57e-11,"****",1555.6,2,5
-"Bacteroidota","Omnivore","Vegetarian",394,118,0.003,0.034,"*",1823.6,3,5
-"Firmicutes","Ketogenic","Vegetarian",231,214,0.002,0.022,"*",1702.6,2,5
-"Firmicutes","Omnivore","Vegetarian",1674,214,0.002,0.016,"*",1970.6,3,5
