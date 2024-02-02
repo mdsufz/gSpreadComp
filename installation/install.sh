@@ -263,13 +263,23 @@ then
 	then :;
 	else
 	#channels config
-	conda config --add channels bioconda
+	#conda config --add channels bioconda
 
 	#Env creation
+	#conda create -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env python=2.7.18
+	#conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+	#mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda diamond==0.9.24
+	#pip install deeparg==1.0.2
+
 	conda create -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env python=2.7.18
-	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
-	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda diamond==0.9.24
-	pip install deeparg==1.0.2
+ 	source activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
+   	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda diamond==0.9.24
+   	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda trimmomatic
+   	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda vsearch
+   	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda bedtools==2.29.2
+   	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda bowtie2==2.3.5.1
+   	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda samtools
+   	pip install git+https://github.com/gaarangoa/deeparg.git
 
 	#Deactivate env
 	conda deactivate
