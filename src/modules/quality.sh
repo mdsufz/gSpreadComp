@@ -56,7 +56,7 @@ source $database
 conda activate "$mSPREAD_DEPENDENCIES_ENVS_PATH"/checkm_env
 
 #Set CheckM DB
-CHECKM_DB="$DATABASES_LOCATION"checkm
+CHECKM_DB="$DATABASES_LOCATION"/checkm
 
 echo ${CHECKM_DB} | checkm data setRoot ${CHECKM_DB}
 
