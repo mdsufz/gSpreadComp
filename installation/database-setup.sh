@@ -183,9 +183,13 @@ elif [ "$active_module" = "optional" ]; then
     mkdir -p  "$database_location"/"gtdbtk"
     cd "$database_location"/"gtdbtk"
     if [ ! -d release*  ]; then
-    wget https://data.gtdb.ecogenomic.org/releases/latest/auxillary_files/gtdbtk_v2_data.tar.gz
-    tar xzf gtdbtk_v2_data.tar.gz
-    rm -fr gtdbtk_v2_data.tar.gz
+
+    wget https://data.gtdb.ecogenomic.org/releases/latest/auxillary_files/gtdbtk_data.tar.gz
+    # Extract the contents (assuming a tar archive)
+    tar xzf gtdbtk_data.*
+    # Remove the downloaded file
+    rm -fr gtdbtk_data.*
+
 
     else echo "-> your GTDBtk database is ready"
     fi
