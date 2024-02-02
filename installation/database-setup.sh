@@ -71,7 +71,7 @@ if [ "$active_module" = "all" ]; then
     fi
 	cd -
 	
-	### DeepARG
+### DeepARG
     mkdir -p  "$database_location"/"deeparg"
     cd "$database_location"/"deeparg"
     if [ ! -f model/v2/metadata_LS.pkl  ]; then
