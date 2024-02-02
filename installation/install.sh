@@ -279,6 +279,7 @@ then
    	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda bedtools==2.29.2
    	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda bowtie2==2.3.5.1
    	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda samtools
+       	python -m ensurepip --default-pip
    	pip install git+https://github.com/gaarangoa/deeparg.git
 
 	#Deactivate env
