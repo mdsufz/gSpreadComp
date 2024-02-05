@@ -353,7 +353,7 @@ This will display the available parameters and their descriptions.
 If you've followed our tutorial steps sequentially, you should have the required inputs ready for the `gspread` module. Here's how to execute the module with the processed outputs:
 
 ```bash
-gspreadcomp gspread --gtdbtk ./03_gspread_gtdb_taxonomy/gtdb_df_format_gSpread.csv  --checkm ./04_gspread_checkm_quality/checkm_df_format_gSpread.csv --gene ./05_gspread_deeparg_args/deeparg_df_combined_gSpreadformat.csv --meta ./02_metadata_gspread_sample.csv --plasmid ./06_gspread_plasmids/plasflow_output_combined.csv --vf ./07_gspread_pathogens/victors_ann_format.csv -t 25 -o ./08_gspread_results/ --target_gene_col Gene_id
+gspreadcomp gspread --gtdbtk ./03_gspread_gtdb_taxonomy/gtdb_df_format_gSpread.csv  --checkm ./04_gspread_checkm_quality/checkm_df_format_gSpread.csv --gene ./05_gspread_deeparg_args/deeparg_df_format_gSpread.csv --meta ./02_metadata_gspread_sample.csv --plasmid ./06_gspread_plasmids/plasflow_combined_format_gSpread.csv --vf ./07_gspread_pathogens/victors_format_gSpread.csv -t 25 -o ./08_gspread_results/ --target_gene_col Gene_id
 ```
 
 ### Inspecting the Output of the gSpread Module
