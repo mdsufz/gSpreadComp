@@ -11,9 +11,6 @@ params:
 
 
 ```{r, include=FALSE}
-#setwd("~/pCloudDrive/Chapter3_DietMAGs/mspread_test_out")
-#setwd("P:/Chapter3_DietMAGs/mspread_test_out")
-#setwd("/Users/jonask/pCloud Drive/Chapter3_DietMAGs/mspread_test_out")
 library(dplyr)
 library(knitr)
 library(DT)
