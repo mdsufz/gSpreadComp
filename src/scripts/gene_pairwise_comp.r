@@ -4,7 +4,7 @@
 #Describe MAGs and Save figures
 
 #### Load libs and inputs
-
+suppressPackageStartupMessages({
 library("optparse")
 library("dplyr")
 library("tidyr")
@@ -13,10 +13,10 @@ library("data.table")
 library("viridis")
 library("pheatmap")
 library("forcats")
-library(rstatix)
-library(tidyverse)
-library(purrr)
-library(progress)
+library("rstatix")
+library("tidyverse")
+library("purrr")
+library("progress")})
 
 
 option_list = list(
