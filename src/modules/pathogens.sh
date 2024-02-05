@@ -103,7 +103,7 @@ if [[ "$vf" == "victors" || "$vf" == "both" ]]; then
     
     echo "Running pathogens module for Victors DB"
     # Load databases paths
-    VICTORS_DB_PATH="$DATABASES_LOCATION"victors/gen_downloads_protein.php
+    VICTORS_DB_PATH="$DATABASES_LOCATION"/victors/gen_downloads_protein.php
     
     if [ -z "$VICTORS_DB_PATH" ]; then 
 	echo "No Victors database found."
@@ -159,7 +159,7 @@ if [[ "$vf" == "vfdb" || "$vf" == "both" ]]; then
     echo "Running pathogens module for VFDB"
     
     # Load databases paths
-    VFDB_DB_PATH="$DATABASES_LOCATION"vfdb/VFDB_setB_pro.fas
+    VFDB_DB_PATH="$DATABASES_LOCATION"/vfdb/VFDB_setB_pro.fas
     
     if [ -z "$VFDB_DB_PATH" ]; then 
 	echo "No VFDB database found."
