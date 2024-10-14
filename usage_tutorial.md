@@ -257,7 +257,7 @@ The user can find an example of the expected plasflow_combined_format_gSpread.cs
 
 3. **plasflow_combined_format_gSpread.csv**: This is the format-ready main output file containing formatted PlasFlow results per genome. It's ready for integration into subsequent `gSpreadComp` modules.
 
-### Pathogens Annotation using Virulence Factors Databases
+### Virulence Factor Annotation
 
 The Pathogens module in `gSpreadComp` aligns the provided genomes against selected Virulence Factors databases and formats the output. 
 The pathogens module essentially uses BLAST to align your genomes with defined Virulence Factors databases. Here, the user can find the [Victors](https://academic.oup.com/nar/article/47/D1/D693/5144967?) database and the [VFDB](https://academic.oup.com/nar/article/50/D1/D912/6446532) database.
@@ -327,16 +327,17 @@ The user can find an example of the expected victors_format_gSpread.csv [here](t
 The `vfdb_format_gSpread.csv.csv` and `victors_format_gSpread.csv.csv` files contain virulence factors results for each genome in a format that is ready for integration into subsequent `gSpreadComp` modules. These files are crucial for downstream analysis and should be retained.
 
 ## Using custom files not generated with gSpreadComp
-
-If the user wants to generate custom, quality, taxonomy, gene annotation, plasmid identification, or Virulence Factors annotation files outside gSpreadComp, it is important to maintain the table formatting. 
-
-All the examples of input tables used by the gSpread module are [here](test_data).
-
- **Most important is to keep the column naming as seen in the example tables.**
+> [!TIP]
+> 
+> If the user wants to generate custom, quality, taxonomy, gene annotation, plasmid identification, or Virulence Factors annotation files outside gSpreadComp, it is important to maintain the table formatting.
+>
+> All the examples of input tables used by the gSpread module are [here](test_data).
+>
+>  **Most important is to keep the column naming as seen in the example tables.**
 
 ## gSpread Module: Main Analysis and Downstream Processing
 
-The `gspread` module is the final step in the `gSpreadComp` pipeline, integrating the previous modules' outputs to comprehensively analyze gene spread, plasmid-mediated horizontal gene transfer, and pathogenic risk.
+The `gspread` module is the final step in the `gSpreadComp` pipeline, integrating the previous modules' outputs to comprehensively analyze gene spread, potential plasmid-mediated horizontal gene transfer, and resistace-virulence ranking.
 
 ### Usage:
 
@@ -363,7 +364,7 @@ After running the command, the `gspread` module will produce several output file
 ```
 08_gspread_results/
 ├── common_tax_target.csv
-├── gSpread_risk_report.html
+├── gSpread_report.html
 ├── gene_pairwise_comp_results
 ├── gene_spread_results
 ├── genome_quality_norm
@@ -374,10 +375,9 @@ After running the command, the `gspread` module will produce several output file
 └── pathogens_results
 ```
 
-Among these, the `gSpread_risk_report.html` provides a comprehensive report on the risk assessment, while other files and directories contain detailed results from various analyses performed by the module.
+Among these, the `gSpread_report.html` , while other files and directories contain detailed results from various analyses performed by the module.
 
 Several of the generated files are used in the report. However, a detailed inspection of all the outputs may also help the user.
 
-The main files are the mags_complete_annotation.csv and the mags_summary_results.csv, which contain a result compilation and a risk metric for every given genome.
+The main files are the mags_complete_annotation.csv and the mags_summary_results.csv, which contain a result compilation and a ranking based on the resistance-virulence metric for every given genome.
 
-MORE DETAILS ARE COMING!
