@@ -1,5 +1,5 @@
 ---
-title: "gSpreadComp Genome Risk Assesment Report"
+title: "gSpreadComp Genome Report"
 output:
    rmdformats::readthedown
 date: "`r format(Sys.Date(), '%Y-%m-%d')`"
@@ -175,7 +175,7 @@ for(tab in tabs) {
 }
 ```
 
-## Plasmid-mediated HGT events {.tabset} 
+## Potential Plasmid-mediated HGT events {.tabset} 
 
 ```{r, results='asis', echo=FALSE}
 tabs <- sort(unique(mags_summary$Target))
