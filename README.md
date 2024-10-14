@@ -1,4 +1,4 @@
-## # gSpreadComp: Streamlining Microbial Community Analysis for Resistance, Virulence, and Plasmid-Mediated Spread
+## gSpreadComp: Streamlining Microbial Community Analysis for Resistance, Virulence, and Plasmid-Mediated Spread
 
 
 <p align="center" width="100%">
@@ -35,7 +35,7 @@ gSpreadComp is a UNIX-based, modular bioinformatics toolkit designed to streamli
 >
 > Metadata information data should look like: [Metadata Sample](test_data/02_metadata_gspread_sample.csv)
 
-By the end of a succesful run, you should have a report that looks like this: [View Report](test_data/gSpread_example_result_report.html){:target="_blank"}
+By the end of a succesful run, you should have a report that looks like this: [Download Example Report](https://github.com/JotaKas/gSpreadComp/raw/refs/heads/main/test_data/gSpread_example_result_report.html)
 
 ### Comprehensive Workflow
 
