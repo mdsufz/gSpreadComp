@@ -171,7 +171,7 @@ out=`realpath $out`
 
 rmd_file_path=$mSPREAD_CONDA_ENVIRONMENT_PATH/bin/gspread_report_generator.Rmd
 
-Rscript -e "rmarkdown::render('$rmd_file_path', output_file='$out/gSpread_risk_report.html', params=list(resource_path='$out', taxa='$spread_taxa', gene_col='$target_gene_col'))"
+Rscript -e "rmarkdown::render('$rmd_file_path', output_file='$out/gSpread_report.html', params=list(resource_path='$out', taxa='$spread_taxa', gene_col='$target_gene_col'))"
 
 
 echo "Report generation finished!"
