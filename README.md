@@ -9,7 +9,8 @@
 
 gSpreadComp is a UNIX-based, modular bioinformatics toolkit designed to streamline comparative genomics for analyzing microbial communities. It integrates genome annotation, gene spread calculation, plasmid-mediated horizontal gene transfer (HGT) detection and resistance-virulence ranking within the analysed microbial community to help researchers identify potential resistance-virulence hotspots in complex microbial datasets.
 
-> **TIP:** After installation, the user may want to check a detailed tutorial with example input and output data [here](usage_tutorial.md)
+> [!TIP]
+> After installation, the user may want to check a detailed tutorial with example input and output data [here](usage_tutorial.md)
 
 ### Objectives and Features
 - **Six Integrated Modules**: Offers modules for taxonomy assignment, genome quality estimation, ARG annotation, plasmid/chromosome classification, virulence factor annotation, and in-depth downstream analysis, including target-based gene spread analysis and prokaryotic resistance-virulence ranking.
@@ -21,13 +22,20 @@ gSpreadComp is a UNIX-based, modular bioinformatics toolkit designed to streamli
 `gSpreadComp`’s modular nature enables researchers to use the tool's main analysis and report generation steps independently or to integrate only specific pieces of `gSpreadComp` into their pipelines, providing flexibility and accommodating the varying software management needs of investigators.
 
 #### Using other annotation tools with gSpreadComp
-> **TIP:** Users can incorporate results from other annotation tools within gSpreadComp's workflow, provided the input is formatted according to gSpreadComp's specifications. This allows for the integration of preferred or specialized tools for specific steps (e.g., alternative ARG or plasmid detection methods) while still benefiting from gSpreadComp's downstream analysis capabilities.
+> [!TIP]
+> Users can incorporate results from other annotation tools within gSpreadComp's workflow, provided the input is formatted according to gSpreadComp's specifications. This allows for the integration of preferred or specialized tools for specific steps (e.g., alternative ARG or plasmid detection methods) while still benefiting from gSpreadComp's downstream analysis capabilities.
+> 
+> For the quality data it should look like: [Quality DataFrame Format](test_data/checkm_df_format_gSpread.csv)
+> 
+> For the taxonomy data it should look like: [Taxonomy DataFrame Format](test_data/gtdb_df_format_gSpread.csv)
+> 
+> For the gene annotation (e.g. ARGs) data it should look like: [Gene annotation DataFrame Format](test_data/deeparg_df_format_gSpread.csv)
+> 
+> For the plasmid identification data it should look like: [Plasmid identification DataFrame Format](test_data/plasflow_combined_format_gSpread.csv)
+>
+> Metadata information data should look like: [Metadata Sample](test_data/02_metadata_gspread_sample.csv)
 
-For the quality data it should look like: ___________
-For the taxonomy data it should look like: ___________
-For the gene annotation (e.g. ARGs) data it should look like: ___________
-For the plasmid identification data it should look like: ___________
-
+By the end of a succesful run, you should have a report that looks like this: [View Report](test_data/gSpread_example_result_report.html){:target="_blank"}
 
 ### Comprehensive Workflow
 
