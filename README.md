@@ -1,28 +1,47 @@
-## gSpreadComp: Prokaryotic Quantitative Risk Assessment, gene spread, and plasmid-mediated HGT
+## # gSpreadComp: Streamlining Microbial Community Analysis for Resistance, Virulence, and Plasmid-Mediated Spread
+
 
 <p align="center" width="100%">
 	<img width="30%" src="/gspreadcomp_logo_noback.png">
 </p>
 
-### Description
-`gSpreadComp` is a UNIX-based, modular bioinformatics tool designed for prokaryotic quantitative risk assessment, gene spread analysis, and evaluation of plasmid-mediated horizontal transmission to pathogens within microbial communities. It was designed to use sequence data to enhance the traditional quantitative microbial risk assessment (QMRA) models by offering more detailed and integrated analyses of microbial communities in the metagenomic era.
+### Overview
 
-After installation, the user may want to check a detailed tutorial with example input and output data [here](usage_tutorial.md)
+gSpreadComp is a UNIX-based, modular bioinformatics toolkit designed to streamline comparative genomics for analyzing microbial communities. It integrates genome annotation, gene spread calculation, plasmid-mediated horizontal gene transfer (HGT) detection and resistance-virulence ranking within the analysed microbial community to help researchers identify potential resistance-virulence hotspots in complex microbial datasets.
+
+> **TIP:** After installation, the user may want to check a detailed tutorial with example input and output data [here](usage_tutorial.md)
 
 ### Objectives and Features
-- **Six Integrated Modules**: Offers modules for taxonomy assignment, genome quality estimation, ARG annotation, plasmid/chromosome classification, virulence factor annotation, and in-depth downstream analysis, including target-based gene spread analysis and prokaryotic risk assessment.
+- **Six Integrated Modules**: Offers modules for taxonomy assignment, genome quality estimation, ARG annotation, plasmid/chromosome classification, virulence factor annotation, and in-depth downstream analysis, including target-based gene spread analysis and prokaryotic resistance-virulence ranking.
 - **Weighted Average Prevalence (WAP)**: Employs WAP for calculating the spread of target genes at different taxonomical levels or target groups, enabling refined analyses and interpretations of microbial communities.
-- **Reference Pathogen Identification**: Compares genomes to the NCBI pathogens database to identify reference pathogens and to determine the pathogenic risk factors.
-- **Pathogenic Risk Assessment**: Utilizes the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) for quantifying pathogenic risk, considering target genes, virulence, and plasmid transmissibility potential.
+- **Reference Pathogen Identification**: Compares genomes to the NCBI pathogens database to create a resistance-virulence ranking within the community.
 - **HTML Reporting**: Culminates in a structured HTML report after the complete downstream analysis, providing users with an overview of the results.
 
 ### Modular Approach and Flexibility
 `gSpreadComp`’s modular nature enables researchers to use the tool's main analysis and report generation steps independently or to integrate only specific pieces of `gSpreadComp` into their pipelines, providing flexibility and accommodating the varying software management needs of investigators.
 
+#### Using other annotation tools with gSpreadComp
+> **TIP:** Users can incorporate results from other annotation tools within gSpreadComp's workflow, provided the input is formatted according to gSpreadComp's specifications. This allows for the integration of preferred or specialized tools for specific steps (e.g., alternative ARG or plasmid detection methods) while still benefiting from gSpreadComp's downstream analysis capabilities.
+
+For the quality data it should look like: ___________
+For the taxonomy data it should look like: ___________
+For the gene annotation (e.g. ARGs) data it should look like: ___________
+For the plasmid identification data it should look like: ___________
+
+
 ### Comprehensive Workflow
-`gSpreadComp` amalgamates genome annotation, normalization, and sequence comparison in a unified approach, systematically quantifying gene spread and integrating plasmid-mediated gene transfer annotation with the whole microbiome community in a genome-reference independent manner and furnishing a sophisticated QMRA metric.
 
 ![ScreenShot](/test_data/01_Kasmanas_gSpread_Fig_1.png)
+
+gSpreadComp consists of the following modules:
+
+1. **Taxonomy Assignment**: Uses [GTDBtk v2](https://academic.oup.com/bioinformatics/article/38/23/5315/6758240) for taxonomic classification.
+2. **Genome Quality Estimation**: Employs [CheckM](https://genome.cshlp.org/content/25/7/1043) for assessing genome completeness and contamination.
+3. **ARG Annotation**: Utilizes [DeepARG](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-018-0401-z) for antimicrobial resistance gene prediction.
+4. **Plasmid Classification**: Implements [Plasflow](https://academic.oup.com/nar/article/46/6/e35/4807335) for plasmid sequence identification.
+5. **Virulence Factor Annotation**: Annotates virulence factors using the [Victors](https://academic.oup.com/nar/article/47/D1/D693/5144967?login=false) and/or [VFDB](http://www.mgc.ac.cn/VFs/main.htm) databases.
+6. **Downstream Analysis**: Performs gene spread analysis, resistance-virulence ranking, and potential plasmid-mediated HGT detection.
+
 
 # Requirements
 
@@ -43,9 +62,6 @@ Before installing and running `gSpreadComp`, ensure that your system meets the f
 
 ## Database Management
 `gSpreadComp` includes an easy-to-use script for automatic download and configuration of the required databases, with scheduled updates every January and July.
-
-## Modular Nature
-Allows for independent usage of its bioinformatic approaches, facilitating integration into existing pipelines and offering flexibility in analysis.
 
 ## Compatibility and Requirements
 Designed to support Linux x64 systems, requiring approximately 15 GB for software installation and around 92 GB for the entire database requirements.
@@ -133,7 +149,7 @@ $ bash -i installation/database-setup.sh --help
 
         gSpreadComp database script v=1.0
         Usage: bash -i database-setup.sh --dbs [module] -o output_folder_for_dbs
-		    USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH gSpreadCOMP
+		    USE THE SAME DATABASE LOCATION OUTPUT FOLDER FOR ALL DATABASES USED WITH gSpreadComp
           --dbs all				download and install the required and optional databases [default]"
           --dbs required              		download and install the required databases (Victors and VFDB) for gSpreadComp
           --dbs optional              		download and install all the optional (ARGs, GTDB-tk, CheckM) databases for gSpreadComp
@@ -213,7 +229,7 @@ gspreadcomp plasmid [options] --genome_dir genome_folder -o output_dir
   - `-o STR`: output directory
   - `-h --help`: print this message
 
-#### 5. Pathogen Alignment
+#### 5. Virulence Factor annotation
 ```sh
 gspreadcomp pathogens [options] --genome_dir genome_folder -o output_dir
 ```
@@ -246,5 +262,15 @@ gspreadcomp gspread [options] -o output_dir
   - `-h --help`: print this message
 
 
+## Important Considerations
 
+- gSpreadComp is designed for hypothesis generation and is not a standalone risk assessment tool.
+- Results should be interpreted cautiously and used to guide further experimental validation.
+- The tool provides relative rankings within analyzed communities, not absolute risk assessments.
+
+## Citation
+
+If you use gSpreadComp in your research, please cite:
+
+[Citation information will be added upon publication]
 
