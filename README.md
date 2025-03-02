@@ -35,7 +35,7 @@ gSpreadComp is a UNIX-based, modular bioinformatics toolkit designed to streamli
 >
 > Metadata information data should look like: [Metadata Sample](test_data/02_metadata_gspread_sample.csv)
 
-By the end of a succesful run, you should have a report that looks like this: [Download Example Report](https://github.com/JotaKas/gSpreadComp/raw/refs/heads/main/test_data/gSpread_example_result_report.html)
+By the end of a successful run, you should have a report that looks like this: [Download Example Report](https://raw.githubusercontent.com/mdsufz/gSpreadComp/refs/heads/main/test_data/gSpread_example_result_report.html)
 
 ### Comprehensive Workflow
 
