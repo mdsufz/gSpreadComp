@@ -97,7 +97,7 @@ The installation script was designed to install and set up all necessary tools a
 
 ```console
 # Clone repository
-$ git clone https://github.com/JotaKas/gSpreadComp.git
+$ git clone https://github.com/mdsufz/gSpreadComp.git
 
 # Go to the gSpreadComp cloned repository folder
 $ cd gSpreadComp
