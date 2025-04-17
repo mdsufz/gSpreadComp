@@ -187,7 +187,8 @@ elif [ "$active_module" = "optional" ]; then
     cd "$database_location"/"gtdbtk"
     if [ ! -d release*  ]; then
 
-    wget https://data.gtdb.ecogenomic.org/releases/latest/auxillary_files/gtdbtk_data.tar.gz
+    wget https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/auxillary_files/gtdbtk_package/full_package/gtdbtk_data.tar.gz
+
     # Extract the contents (assuming a tar archive)
     tar xzf gtdbtk_data.*
     # Remove the downloaded file
