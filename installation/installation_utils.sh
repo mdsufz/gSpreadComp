@@ -34,8 +34,8 @@ start_pre_configuration() {
     mamba install -y -c conda-forge r-patchwork
     mamba install -y -c conda-forge r-pheatmap
     mamba install -y -c conda-forge r-ggforce
-    mamba install -c conda-forge r-rglpk
-    mamba install -c conda-forge r-glpkapi
+    mamba install -y -c conda-forge r-rglpk
+    mamba install -y -c conda-forge r-glpkapi
     #R -e "install.packages(c('Rglpk', 'glpkAPI', 'combinat', 'triangle'), dependencies=TRUE, repos='https://cloud.r-project.org/')"
     R -e "install.packages(c('combinat', 'triangle'), dependencies=TRUE, repos='https://cloud.r-project.org/')"
     R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/MCDA/MCDA_0.0.24.tar.gz', repos=NULL, type='source')"
