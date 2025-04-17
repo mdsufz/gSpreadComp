@@ -226,6 +226,8 @@ then
 	conda activate $mSPREAD_DEPENDENCIES_ENVS_PATH/plasflow_env
 	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/plasflow_env -c jjhelmus tensorflow=0.10.0rc0
 	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/plasflow_env plasflow -c smaegol
+ 	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/plasflow_env -c conda-forge libgfortran=3
+   	pip install pandas==0.23 numpy==1.12
 
 	#Deactivate env
 	conda deactivate
