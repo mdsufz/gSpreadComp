@@ -96,7 +96,7 @@ yes | cp -rf $(dirname $0)/config  $mSPREAD_CONDA_ENVIRONMENT_PATH/bin
 echo -e "\n### WELCOME TO gspreadcomp! ###\n"
 echo "Do you want to install the complete gspreadcomp pipeline?"
 echo "- Main: gspreadcomp metagenome analysis workflow"
-echo "- Accessory: Antimicrobial genes annotation with DeepARG [Current inactive]"
+echo "- Accessory: Antimicrobial genes annotation with DeepARG"
 echo "- Accessory: Taxonomical assigning with GTDB-tk"
 echo "- Accessory: Genome Quality estimation with CheckM"
 echo "[Y/N]"
@@ -271,7 +271,7 @@ then
 	#mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda diamond==0.9.24
 	#pip install deeparg==1.0.2
 
-	conda create -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env python=2.7.18
+	conda create -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env python=2.7.15
  	source activate $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env
    	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda diamond==0.9.24
    	mamba install -y --prefix $mSPREAD_DEPENDENCIES_ENVS_PATH/deeparg_env -c bioconda trimmomatic
